@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
+import com.ly.cloud.exception.CloudException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.utils.DateUtils;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
@@ -44,13 +45,14 @@ public class WeekController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public WebResponse<Boolean> add(@RequestBody WeekDto weekDto) throws Exception {
 		ValidatorUtils.validateEntity(weekDto,AddGroup.class);
-		System.out.println(weekDto);
 		WeekEntity weekEntity = new WeekEntity();
 		BeanUtils.copyProperties(weekDto, weekEntity);
+		if(weekEntity.getJsrq().before(weekEntity.getKsrq())) {
+			throw new CloudException("周程的结束时间不能早于开始时间");
+		}
 		weekEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		weekEntity.setKsrq(DateUtils.setDayStar(weekEntity.getKsrq()));
 		weekEntity.setJsrq(DateUtils.setDayEnd(weekEntity.getJsrq()));
-		
 		weekServivce.insert(weekEntity);
 		return new WebResponse<Boolean>().success(true);
 	}
