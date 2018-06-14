@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -39,16 +41,18 @@ public class WeekItemDto implements Serializable {
 	/**
 	 * 开始时间
 	 */
-	@ApiModelProperty(value = "开始时间",example="2018-6-13 12:00:00")
+	@ApiModelProperty(value = "开始时间",example="2018-6-13 12:00")
 	@NotNull(message = "开始时间不能为空")
-	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
+//	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date kssj;
 
 	/**
 	 * 结束时间
 	 */
-	@ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00:00")
-	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
+	@ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00")
+//	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date jssj;
 
 	/**

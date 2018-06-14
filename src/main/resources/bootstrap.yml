@@ -4,14 +4,14 @@
 spring : 
   application : 
     name : ly-pub-weekly-plan-svc
-#  cloud:
-#      config:
+  cloud:
+      config:
 #       uri : http://localhost:8040/ #从注册服务中取
-#        profile: dev
-#        label: master
-#        discovery:
-#          enabled: true
-#          service-id: ly-cloud-config-server
+        profile: dev
+        label: master
+        discovery:
+          enabled: true
+          service-id: ly-cloud-config-server
     
 ############################################################################################
 ###################################### 运行容器端口设置 ##########################################
