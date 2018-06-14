@@ -1,0 +1,101 @@
+package com.ly.cloud.weekplan.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * 
+ * Class Name: WeekItemEntity Description: 周程项DTO
+ * 
+ * @author: Liyewang
+ * @mail: Liyewang@ly-sky.com
+ * @date: 2018年6月13日
+ * @version: 1.0
+ *
+ */
+@ApiModel(value = "周程项表单")
+@Data
+public class WeekItemDto implements Serializable {
+
+	/**
+	 * @Fields serialVersionUID :
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 主键
+	 */
+	private String bh;
+
+	/**
+	 * 开始时间
+	 */
+	@ApiModelProperty(value = "开始时间")
+	@NotNull(message = "开始时间不能为空")
+	private Date kssj;
+
+	/**
+	 * 结束时间
+	 */
+	@ApiModelProperty(value = "结束时间")
+	private Date jssj;
+
+	/**
+	 * 显示地点
+	 */
+	@ApiModelProperty(value = "显示地点")
+	@NotBlank(message = "显示地点不能为空")
+	private String xsdd;
+
+	/**
+	 * 关联的会议室
+	 */
+	@ApiModelProperty(value = "关联的会议室")
+	private String hysbh;
+
+	/**
+	 * 内容
+	 */
+	@ApiModelProperty(value = "内容")
+	@NotBlank(message = "内容不能为空")
+	private String nr;
+
+	/**
+	 * 主办部门
+	 */
+	@ApiModelProperty(value = "主办部门")
+	private String zbbm;
+
+	/**
+	 * 出席领导
+	 */
+	@ApiModelProperty(value = "出席领导")
+	private String cxld;
+
+	/**
+	 * 参加人员编号
+	 */
+	@ApiModelProperty(value = "参加人员编号")
+	private String xscjry;
+
+	/**
+	 * 参加人员编号
+	 */
+	@ApiModelProperty(value = "参加人员编号")
+	private String cjrybh;
+
+	/**
+	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
+	 */
+	@ApiModelProperty(value = "周程状态")
+	private int zt;
+
+}
