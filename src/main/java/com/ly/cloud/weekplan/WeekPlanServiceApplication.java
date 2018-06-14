@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  */  
 @SpringBootApplication(scanBasePackages={"com.ly.cloud"})
-//@EnableTransactionManagement  
+@EnableTransactionManagement  
 @EnableEurekaClient
 //@EnableFeignClients
 //@EnableCircuitBreaker 

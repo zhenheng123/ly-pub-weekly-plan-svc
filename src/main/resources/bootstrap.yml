@@ -5,13 +5,13 @@ spring :
   application : 
     name : ly-pub-weekly-plan-svc
   cloud:
-#      config:
-#        uri : http://eureka:1200/eureka/ #从注册服务中取
-#        profile: dev
-#        label: master
-#        discovery:
-#          enabled: true
-#          service-id: ly-cloud-config-server
+      config:
+#       uri : http://localhost:8040/ #从注册服务中取
+        profile: dev
+        label: master
+        discovery:
+          enabled: true
+          service-id: ly-cloud-config-server
     
 ############################################################################################
 ###################################### 运行容器端口设置 ##########################################
@@ -20,7 +20,6 @@ server :
   port : 1490
   tomcat : 
       uri-encoding : UTF-8
-    
 ############################################################################################
 ################################### eureka Server ##########################################
 ############################################################################################
@@ -34,6 +33,7 @@ eureka :
             defaultZone : ${defaultZone:http://${discovery:discovery}:1200/eureka/}
         register-with-eureka : true
         fetch-registry : true
+
 #############################################################################################
 ###################################### logstash config ######################################
 #############################################################################################
