@@ -2,9 +2,11 @@ package com.ly.cloud.weekplan.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ly.cloud.weekplan.entity.WeekItemEntity;
 
 import lombok.Data;
 
@@ -42,13 +44,13 @@ public class WeekVo implements Serializable {
     /**
      * 开始日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date ksrq;
 
     /**
      * 结束日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date jsrq;
 
     /**
@@ -65,5 +67,10 @@ public class WeekVo implements Serializable {
 	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
 	 */
 	private int zt;
+	
+	/**
+	 * 周程项集合
+	 */
+	private List<WeekItemEntity> weekItemVoList;
 
 }

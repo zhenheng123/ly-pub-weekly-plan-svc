@@ -36,6 +36,7 @@ public class WeekItemDto implements Serializable {
 	/**
 	 * 主键
 	 */
+	@ApiModelProperty(value = "主键")
 	private String bh;
 
 	/**
@@ -76,33 +77,47 @@ public class WeekItemDto implements Serializable {
 	private String nr;
 
 	/**
-	 * 主办部门
+	 * 主办部门编号
 	 */
-	@ApiModelProperty(value = "主办部门")
-	private String zbbm;
+	@ApiModelProperty(value = "主办部门编号")
+	private String zbbmbh;
+	
+	/**
+	 * 主办部门名称
+	 */
+	@ApiModelProperty(value = "主办部门名称")
+	private String zbbmmc;
 
 	/**
-	 * 出席领导
+	 * 出席领导编号
 	 */
-	@ApiModelProperty(value = "出席领导")
-	private String cxld;
-
+	@ApiModelProperty(value = "出席领导编号")
+	private String cxldbh;
+	
 	/**
-	 * 参加人员编号
+	 * 出席领导名称
 	 */
-	@ApiModelProperty(value = "参加人员编号")
-	private String xscjry;
+	@ApiModelProperty(value = "出席领导名称")
+	private String cxldmc;
 
 	/**
 	 * 参加人员编号
 	 */
 	@ApiModelProperty(value = "参加人员编号")
 	private String cjrybh;
+	
+	/**
+	 * 参加人员名称
+	 */
+	@ApiModelProperty(value = "参加人员名称")
+	private String cjrymc;
+
+	
 
 	/**
-	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
+	 * 周程项状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
 	 */
-	@ApiModelProperty(value = "周程状态")
+	@ApiModelProperty(value = "周程项状态，审批中:1，通过:2，有效:3，无效:4")
 	private int zt;
 
 }

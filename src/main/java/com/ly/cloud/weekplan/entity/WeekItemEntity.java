@@ -3,10 +3,16 @@ package com.ly.cloud.weekplan.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -23,9 +29,6 @@ import lombok.Data;
 @TableName("LY_BG_ZC_ZCTM")
 public class WeekItemEntity implements Serializable {
 
-	/**
-	 * @Fields serialVersionUID :
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -34,23 +37,12 @@ public class WeekItemEntity implements Serializable {
 	@TableId(value = "BH")
 	private String bh;
 
-//	/**
-//	 * 显示日期
-//	 */
-//	@TableField(value = "XSRQ")
-//	private String xsrq;
-//
-//	/**
-//	 * 显示时间
-//	 */
-//	@TableField(value = "XSSJ")
-//	private String xssj;
-
 	/**
 	 * 开始时间
 	 */
 	@TableField(value = "KSSJ")
 	private Date kssj;
+
 	/**
 	 * 结束时间
 	 */
@@ -76,32 +68,43 @@ public class WeekItemEntity implements Serializable {
 	private String nr;
 
 	/**
-	 * 主办部门
+	 * 主办部门编号
 	 */
-	@TableField(value = "ZBBM")
-	private String zbbm;
+	@TableField(value = "ZBBMBH")
+	private String zbbmbh;
 
 	/**
-	 * 出席领导
+	 * 主办部门名称
 	 */
-	@TableField(value = "CXLD")
-	private String cxld;
+	@TableField(value = "ZBBMMC")
+	private String zbbmmc;
 
 	/**
-	 * 参加人员编号
+	 * 出席领导编号
 	 */
-	@TableField(value = "XSCJRY")
-	private String xscjry;
+	@TableField(value = "CXLDBH")
+	private String cxldbh;
 
+	/**
+	 * 出席领导名称
+	 */
+	@TableField(value = "CXLDMC")
+	private String cxldmc;
 
 	/**
 	 * 参加人员编号
 	 */
 	@TableField(value = "CJRYBH")
 	private String cjrybh;
-	
+
 	/**
-	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
+	 * 参加人员名称
+	 */
+	@TableField(value = "CJRYMC")
+	private String cjrymc;
+
+	/**
+	 * 周程状态（审批中:1，通过:2，有效:3，无效:4）
 	 */
 	@TableField(value = "ZT")
 	private int zt;

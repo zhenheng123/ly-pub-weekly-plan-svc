@@ -14,6 +14,8 @@ import com.ly.cloud.weekplan.entity.WeekItemEntity;
  *
  */
 public interface WeekItemMapper extends BaseMapper<WeekItemEntity> {
+	
+	
 
 }
   

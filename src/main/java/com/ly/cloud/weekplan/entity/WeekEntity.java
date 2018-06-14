@@ -60,6 +60,12 @@ public class WeekEntity implements Serializable {
      */
 	@TableField(value="BZ")
     private String bz;
+	
+	/**
+     * 周程的发布状态：0未发布，1已发布
+     */
+	@TableField(value="ZT")
+    private String zt;
 
     /**
      * 所属机构

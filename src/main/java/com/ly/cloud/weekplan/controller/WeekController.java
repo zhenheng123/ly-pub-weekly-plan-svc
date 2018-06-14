@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,8 @@ import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.WeekVo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -43,7 +46,7 @@ public class WeekController {
 	
 	@ApiOperation("添加周程")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public WebResponse<Boolean> add(@RequestBody WeekDto weekDto) throws Exception {
+	public WebResponse<Boolean> add(@RequestBody WeekDto weekDto,@RequestHeader("loginUserOrgId")String orgId) throws Exception {
 		ValidatorUtils.validateEntity(weekDto,AddGroup.class);
 		WeekEntity weekEntity = new WeekEntity();
 		BeanUtils.copyProperties(weekDto, weekEntity);
@@ -53,6 +56,7 @@ public class WeekController {
 		weekEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		weekEntity.setKsrq(DateUtils.setDayStar(weekEntity.getKsrq()));
 		weekEntity.setJsrq(DateUtils.setDayEnd(weekEntity.getJsrq()));
+		weekEntity.setOrgclass(orgId);
 		weekServivce.insert(weekEntity);
 		return new WebResponse<Boolean>().success(true);
 	}
@@ -78,19 +82,27 @@ public class WeekController {
 	}
 	
 	
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "path", name = "izt", dataType = "int", required = true, value = "周程项的状态，为-1表示查询所有的,审批中:1，通过:2，有效:3，无效:4")
+	})
 	@ApiOperation("根据ID查看一个周程")
-    @RequestMapping(value="/info/{id}",method = RequestMethod.GET)
-    public WebResponse<WeekVo> info(@PathVariable("id") String tid) throws Exception{
-		WeekEntity weekEntity = weekServivce.selectById(tid);
-    	WeekVo weekVo=new WeekVo();
-		BeanUtils.copyProperties(weekEntity, weekVo);
-        return new WebResponse<WeekVo>().success(weekVo);
+    @RequestMapping(value="/info/{id}/{izt}",method = RequestMethod.GET)
+    public WebResponse<WeekVo> info(@PathVariable("id") String id,@PathVariable(name="izt",required=true)Integer izt) throws Exception{
+        return new WebResponse<WeekVo>().success(weekServivce.getById(id,izt));
     }
+	
+	
 	
 	@ApiOperation("分页周程")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-	public WebResponse<PageInfo<WeekVo>> queryPageList(@RequestParam int pageNum, @RequestParam int pageSize,@RequestParam(required=false)@ApiParam("周程名称，不是必须参数") String zcmc) {
-		Page<WeekEntity> page = weekServivce.selectPage(new Page<WeekEntity>(pageNum, pageSize), new EntityWrapper<WeekEntity>().like(StringUtils.isNotBlank(zcmc),"ZCMC",zcmc));
+	public WebResponse<PageInfo<WeekVo>> queryPageList(@RequestParam int pageNum, @RequestParam int pageSize,@RequestParam(required=false)@ApiParam("周程名称，不是必须参数") String zcmc,@RequestParam(required=false)@ApiParam("周程的发布状态：0未发布，1已发布,默认查询所有的周程")Integer zt) {
+		Page<WeekEntity> page = weekServivce.selectPage(
+				new Page<WeekEntity>(pageNum, pageSize), 
+				new EntityWrapper<WeekEntity>()
+					.like(StringUtils.isNotBlank(zcmc),"ZCMC",zcmc)
+					.eq(zt!=null, "ZT", zt)
+					.orderBy("KSRQ")
+				);
 		PageInfo<WeekVo> pageInfo=new PageInfo<WeekVo>();
 		List<WeekVo> volist=new ArrayList<WeekVo>();
 		for(WeekEntity po:page.getRecords()) {

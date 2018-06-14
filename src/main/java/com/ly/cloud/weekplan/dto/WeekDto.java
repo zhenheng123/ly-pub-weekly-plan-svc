@@ -36,6 +36,7 @@ public class WeekDto implements Serializable {
 	/**
 	 * 主键
 	 */
+	@ApiModelProperty(value = "主键")
     private String bh;
 
     /**
@@ -65,12 +66,20 @@ public class WeekDto implements Serializable {
     /**
      * 备注
      */
+    @ApiModelProperty(value = "备注")
     private String bz;
+    
+    /**
+     * 周程的发布状态：0未发布，1已发布
+     */
+    @ApiModelProperty(value = "周程的发布状态：0未发布，1已发布")
+    private String zt;
 
+    
     /**
      * 所属机构
      */
-    @NotBlank(message="所属机构不能为空", groups = AddGroup.class)
+    @ApiModelProperty(value = "所属机构")
     private String orgclass;
 
 }
