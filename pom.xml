@@ -10,8 +10,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ly-pub-weeklyplan-svc</artifactId>
-	<name>ly-pub-weeklyplan-svc</name>
+	<artifactId>ly-pub-weekly-plan-svc</artifactId>
+	<name>ly-pub-weekly-plan-svc</name>
 
 
 	<properties>
