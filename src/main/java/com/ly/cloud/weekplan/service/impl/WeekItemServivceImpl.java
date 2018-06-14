@@ -1,5 +1,7 @@
 package com.ly.cloud.weekplan.service.impl;
 
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ly.cloud.exception.CloudException;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
+import com.ly.cloud.weekplan.common.validator.group.AddGroup;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekItemMapper;
@@ -39,7 +42,9 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	 */
 	@Override
 	public boolean addWeekItem(WeekItemDto weekItemDto) throws Exception {
-		ValidatorUtils.validateEntity(weekItemDto);
+		ValidatorUtils.validateEntity(weekItemDto,AddGroup.class);
+		
+		
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
 		
@@ -51,6 +56,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		if(StringUtils.isBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
 		}
+		
+		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
 		return true;
 	}

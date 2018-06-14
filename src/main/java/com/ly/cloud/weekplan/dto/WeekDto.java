@@ -50,7 +50,7 @@ public class WeekDto implements Serializable {
      * 开始日期
      */
     @ApiModelProperty(value = "开始日期",example="2018-6-13")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotNull(message="开始日期不能为空", groups = AddGroup.class)
     private Date ksrq;
 

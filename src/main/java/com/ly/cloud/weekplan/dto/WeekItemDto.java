@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,14 +39,16 @@ public class WeekItemDto implements Serializable {
 	/**
 	 * 开始时间
 	 */
-	@ApiModelProperty(value = "开始时间")
+	@ApiModelProperty(value = "开始时间",example="2018-6-13 12:00:00")
 	@NotNull(message = "开始时间不能为空")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
 	private Date kssj;
 
 	/**
 	 * 结束时间
 	 */
-	@ApiModelProperty(value = "结束时间")
+	@ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00:00")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss") 
 	private Date jssj;
 
 	/**
