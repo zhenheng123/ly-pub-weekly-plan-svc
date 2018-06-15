@@ -71,6 +71,6 @@ public class WeekVo implements Serializable {
 	/**
 	 * 周程项集合
 	 */
-	private List<WeekItemEntity> weekItemVoList;
+	private List<WeekItemVo> weekItemVoList;
 
 }

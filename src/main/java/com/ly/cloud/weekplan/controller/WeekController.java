@@ -95,13 +95,33 @@ public class WeekController {
 	
 	@ApiOperation("分页周程")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-	public WebResponse<PageInfo<WeekVo>> queryPageList(@RequestParam int pageNum, @RequestParam int pageSize,@RequestParam(required=false)@ApiParam("周程名称，不是必须参数") String zcmc,@RequestParam(required=false)@ApiParam("周程的发布状态：0未发布，1已发布,默认查询所有的周程")Integer zt) {
+	public WebResponse<PageInfo<WeekVo>> queryPageList(
+			
+			@RequestParam 
+			int pageNum, 
+			
+			@RequestParam 
+			int pageSize,
+			
+			@RequestParam(required=false)
+			@ApiParam("周程名称，不是必须参数") 
+			String zcmc,
+			
+			@RequestParam(required=false)
+			@ApiParam("周程的发布状态：0未发布，1已发布,默认查询所有的周程")
+			Integer zt,
+			
+			@ApiParam(value="组织机构ID",required=true)
+			@RequestHeader("loginUserOrgId")
+			String orgId
+		) {
 		Page<WeekEntity> page = weekServivce.selectPage(
 				new Page<WeekEntity>(pageNum, pageSize), 
 				new EntityWrapper<WeekEntity>()
+					.eq("ORGCLASS", orgId)
 					.like(StringUtils.isNotBlank(zcmc),"ZCMC",zcmc)
 					.eq(zt!=null, "ZT", zt)
-					.orderBy("KSRQ")
+					.orderBy("KSRQ",false)
 				);
 		PageInfo<WeekVo> pageInfo=new PageInfo<WeekVo>();
 		List<WeekVo> volist=new ArrayList<WeekVo>();

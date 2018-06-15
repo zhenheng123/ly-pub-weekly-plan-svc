@@ -25,11 +25,12 @@ public interface WeekServivce extends IService<WeekEntity> {
 	 * @param izt 周程项状态
 	 * @return
 	 * @return WeekVo
+	 * @throws Exception 
 	 * @exception @author
 	 *                Liyewang
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月14日
 	 */
-	public WeekVo getById(String id, Integer izt);
+	public WeekVo getById(String id, Integer izt) throws Exception;
 
 }
