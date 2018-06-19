@@ -5,19 +5,19 @@ spring :
   application : 
     name : ly-pub-weekly-plan-svc
   cloud:
-#      config:
-##       uri : http://localhost:8040/ #从注册服务中取
-#        profile: dev
-#        label: master
-#        discovery:
-#          enabled: true
-#          service-id: ly-cloud-config-server
+      config:
+#       uri : http://localhost:8040/ #从注册服务中取
+        profile: dev
+        label: master
+        discovery:
+          enabled: false
+          service-id: ly-cloud-config-server
     
 ############################################################################################
 ###################################### 运行容器端口设置 ##########################################
 ############################################################################################
 server : 
-  port : 8080
+  port : 1490
   tomcat : 
       uri-encoding : UTF-8
 ############################################################################################
