@@ -10,7 +10,7 @@ spring :
         profile: dev
         label: master
         discovery:
-          enabled: false
+          enabled: true
           service-id: ly-cloud-config-server
     
 ############################################################################################
