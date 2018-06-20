@@ -73,7 +73,7 @@ public class WeekDto implements Serializable {
      * 周程的发布状态：0未发布，1已发布
      */
     @ApiModelProperty(value = "周程的发布状态：0未发布，1已发布")
-    private int zt;
+    private Integer zt;
 
     
     /**
