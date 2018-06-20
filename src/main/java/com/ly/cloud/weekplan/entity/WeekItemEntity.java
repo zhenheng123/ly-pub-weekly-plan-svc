@@ -102,6 +102,19 @@ public class WeekItemEntity implements Serializable {
 	 */
 	@TableField(value = "CJRYMC")
 	private String cjrymc;
+	
+	
+	/**
+	 * 提醒人员编号
+	 */
+	@TableField(value = "TXRYBH")
+	private String txrybh;
+
+	/**
+	 * 提醒人员名称
+	 */
+	@TableField(value = "TXRYMC")
+	private String txrymc;
 
 	/**
 	 * 周程状态（审批中:1，通过:2，有效:3，无效:4）

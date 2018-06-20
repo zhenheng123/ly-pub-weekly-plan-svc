@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
@@ -111,6 +112,19 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "参加人员名称")
 	private String cjrymc;
+	
+	
+	/**
+	 * 提醒人员编号
+	 */
+	@ApiModelProperty(value = "提醒人员编号")
+	private String txrybh;
+
+	/**
+	 * 提醒人员名称
+	 */
+	@ApiModelProperty(value = "提醒人员名称")
+	private String txrymc;
 
 	
 
@@ -119,5 +133,8 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "周程项状态，审批中:1，通过:2，有效:3，无效:4")
 	private int zt;
+	
+	
+	
 
 }

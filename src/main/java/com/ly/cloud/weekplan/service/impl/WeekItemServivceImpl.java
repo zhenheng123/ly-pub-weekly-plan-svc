@@ -72,6 +72,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		if(StringUtils.isBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
 		}
+		//是否设置了提醒人员
 		
 		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
