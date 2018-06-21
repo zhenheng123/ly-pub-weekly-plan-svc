@@ -117,10 +117,10 @@ public class WeekItemEntity implements Serializable {
 	private String txrymc;
 
 	/**
-	 * 周程状态（审批中:1，通过:2，有效:3，无效:4）
+	 * 周程条目状态（有效:1，无效:2）
 	 */
 	@TableField(value = "ZT")
-	private int zt;
+	private Integer zt;
 	
 	/**
 	 * 排序号

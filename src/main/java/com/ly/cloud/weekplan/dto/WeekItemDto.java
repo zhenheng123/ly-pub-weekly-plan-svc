@@ -129,10 +129,10 @@ public class WeekItemDto implements Serializable {
 	
 
 	/**
-	 * 周程项状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
+	 * （周程条目状态（有效:1，无效:2）
 	 */
-	@ApiModelProperty(value = "周程项状态，审批中:1，通过:2，有效:3，无效:4")
-	private int zt;
+	@ApiModelProperty(value = "周程条目状态（有效:1，无效:2）")
+	private Integer zt;
 	
 	
 	/**

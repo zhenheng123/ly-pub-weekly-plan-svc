@@ -65,7 +65,7 @@ public class WeekEntity implements Serializable {
      * 周程的发布状态：0未发布，1已发布
      */
 	@TableField(value="ZT")
-    private int zt;
+    private Integer zt;
 
     /**
      * 所属机构

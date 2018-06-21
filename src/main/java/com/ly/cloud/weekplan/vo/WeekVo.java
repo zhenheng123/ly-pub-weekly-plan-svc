@@ -66,7 +66,7 @@ public class WeekVo implements Serializable {
     /**
 	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
 	 */
-	private int zt;
+	private Integer zt;
 	
 	/**
 	 * 周程项集合
