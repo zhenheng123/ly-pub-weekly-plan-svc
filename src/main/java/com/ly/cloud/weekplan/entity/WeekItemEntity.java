@@ -121,5 +121,20 @@ public class WeekItemEntity implements Serializable {
 	 */
 	@TableField(value = "ZT")
 	private int zt;
+	
+	/**
+	 * 排序号
+	 */
+	@TableField(value = "PXH")
+	private Integer pxh;
+	
+	
+	/**
+	 * 是否使用会议室0否，1是
+	 */
+	@TableField(value = "SFHYS")
+	private Integer sfhys;
+	
+	
 
 }

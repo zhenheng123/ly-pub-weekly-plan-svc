@@ -2,6 +2,7 @@ package com.ly.cloud.weekplan.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -127,12 +128,15 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		if(StringUtils.isNotBlank(wid)) {
 			weekEntity= weekServivce.selectById(wid);
 			if(weekEntity!=null && weekEntity.getKsrq()!=null && weekEntity.getJsrq()!=null) {
+				Collection<String> columns;
 				page= this.selectPage(
 						new Page<WeekItemEntity>(pageNum, pageSize), 
 						new EntityWrapper<WeekItemEntity>()
 							.between("KSSJ",DateUtils.setDayStar(weekEntity.getKsrq()) , DateUtils.setDayEnd(weekEntity.getJsrq()))
 							.like(StringUtils.isNotBlank(nr),"NR",nr)
 							.eq(zt!=null, "ZT", zt)
+							.orderBy("KSSJ", true)
+							.orderBy("PXH",false)
 						);
 			}
 		}else {

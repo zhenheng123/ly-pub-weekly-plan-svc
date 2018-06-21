@@ -135,6 +135,18 @@ public class WeekItemDto implements Serializable {
 	private int zt;
 	
 	
+	/**
+	 *排序号
+	 */
+	@ApiModelProperty(value = "排序号")
+	private Integer pxh;
+	
+	
+	/**
+	 * 是否使用会议室0否，1是
+	 */
+	@ApiModelProperty(value = "是否使用会议室0否，1是")
+	private Integer sfhys;
 	
 
 }

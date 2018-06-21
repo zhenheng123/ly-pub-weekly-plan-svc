@@ -1,7 +1,5 @@
 package com.ly.cloud.weekplan.vo;
 
-import java.util.Date;
-
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 
 import lombok.Data;
