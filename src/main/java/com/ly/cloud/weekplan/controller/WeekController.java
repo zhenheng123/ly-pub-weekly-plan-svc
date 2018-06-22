@@ -83,7 +83,7 @@ public class WeekController {
 	
 	
 	@ApiImplicitParams({
-		@ApiImplicitParam(paramType = "path", name = "izt", dataType = "int", required = true, value = "周程项的状态，为-1表示查询所有的,审批中:1，通过:2，有效:3，无效:4")
+		@ApiImplicitParam(paramType = "path", name = "izt", dataType = "int", required = true, value = "周程的发布状态：0未发布，1已发布")
 	})
 	@ApiOperation("根据ID查看一个周程")
     @RequestMapping(value="/info/{id}/{izt}",method = RequestMethod.GET)

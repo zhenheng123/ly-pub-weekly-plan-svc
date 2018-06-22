@@ -52,6 +52,11 @@ public class WeekVo implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date jsrq;
+    
+    /**
+     * 显示日期
+     */
+    private String xxrq;
 
     /**
      * 备注
@@ -64,7 +69,7 @@ public class WeekVo implements Serializable {
     private String orgclass;
     
     /**
-	 * 周程状态（待定:0，审批中:1，通过:2，有效:3，无效:4）
+	 * 周程状态（1有效,2无效）
 	 */
 	private Integer zt;
 	

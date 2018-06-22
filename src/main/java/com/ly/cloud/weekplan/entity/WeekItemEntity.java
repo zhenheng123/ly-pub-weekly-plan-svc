@@ -60,6 +60,8 @@ public class WeekItemEntity implements Serializable {
 	 */
 	@TableField(value = "HYSBH")
 	private String hysbh;
+	
+	
 
 	/**
 	 * 内容

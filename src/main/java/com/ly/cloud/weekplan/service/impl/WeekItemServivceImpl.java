@@ -119,6 +119,17 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		}
 		return reStr;
 	}
+	
+	
+	public String fmZCRQ(Date kssj,Date jssj) throws Exception {
+		String reStr="";
+		DateTime dateTime = new DateTime(kssj);
+		reStr=dateTime.getMonthOfYear()+"月"+dateTime.getDayOfMonth()+"日";
+		dateTime = new DateTime(jssj);
+		reStr+="至"+dateTime.getMonthOfYear()+"月"+dateTime.getDayOfMonth()+"日";
+		return reStr;
+	}
+	
 
 	@Override
 	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, String nr, Integer zt)

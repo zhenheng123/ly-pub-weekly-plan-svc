@@ -59,6 +59,7 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 		}
 		WeekVo weekVo = new WeekVo();
 		BeanUtils.copyProperties(weekEntity, weekVo);
+		weekVo.setXxrq(weekItemServivce.fmZCRQ(weekVo.getKsrq(), weekVo.getJsrq()));
 		weekVo.setWeekItemVoList(WeekItemVoList);
 		return weekVo;
 

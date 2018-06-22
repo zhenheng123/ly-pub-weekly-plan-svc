@@ -89,4 +89,19 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 */
 	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, String nr, Integer zt) throws Exception;
 
+	/**
+	 * 
+	 * Method Name:  fmZCRQ
+	 * Description:  格式化周程的日期
+	 * @param kssj
+	 * @param jssj
+	 * @return
+	 * @throws Exception 
+	 * @return String
+	 * @exception 	
+	 * @author Liyewang
+	 * @mail Liyewang@ly-sky.com
+	 * @date: 2018年6月21日
+	 */
+	public String fmZCRQ(Date kssj,Date jssj) throws Exception;
 }
