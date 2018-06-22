@@ -87,7 +87,7 @@ public class WeekItemController {
 			String nr,
 			
 			@RequestParam(required=false)
-			@ApiParam("周程项状态，不给参数查询所有的，审批中:1，通过:2，有效:3，无效:4")
+			@ApiParam("周程项状态，不给参数查询所有的，1有效，2无效")
 			Integer zt
 			
 		) throws Exception {
