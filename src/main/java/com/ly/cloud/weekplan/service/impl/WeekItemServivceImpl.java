@@ -66,19 +66,21 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
 		
 		
-		if(weekItemDto.getJssj()!=null && weekItemDto.getJssj().before(weekItemDto.getKssj())) {
-			throw new CloudException("周程项的结束时间不能小于开始时间");
-		}
+		
 		//判断是否使用了会议室
 		if(StringUtils.isBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
+			weekItemEntity.setXsdd(weekItemDto.getHysbhmc());
+			if(weekItemDto.getJssj()!=null && weekItemDto.getJssj().before(weekItemDto.getKssj())) {
+				throw new CloudException("周程项的结束时间不能小于开始时间");
+			}
 		}
 		//是否设置了提醒人员
 		
 		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
 		return true;
-	}
+	} 
 
 	@Override
 	public String fmXXSJ(Date kssj, Date jssj) throws Exception {

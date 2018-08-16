@@ -1,69 +1,69 @@
-##############################################################################################
-############################### DataSource properties ########################################
-##############################################################################################
-#spring:
-##  jackson:
-##    date-format: yyyy-MM-dd HH:mm:ss
-##    time-zone: GMT+8
-#
-#  datasource:
-##    schema : classpath:init-sql/schema.sql
-##    data: classpath:init-sql/data.sql
-#    continue-on-error : true
-#    name: master
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    url : jdbc:oracle:thin:@192.168.35.28:1521:orcl
-#    username: lyoa
-#    password: lyoa
-#    filters: stat
-#    maxActive: 20
-#    initialSize: 1
-#    maxWait: 60000
-#    minIdle: 1
-#    timeBetweenEvictionRunsMillis: 60000
-#    minEvictableIdleTimeMillis: 300000
-#    validationQuery: select 'x' from dual
-#    testWhileIdle: true
-#    testOnBorrow: false
-#    testOnReturn: false
-#    poolPreparedStatements: true
-#    maxOpenPreparedStatements: 20
-##############################################################################################
-######################################### MQ config ##########################################
-##############################################################################################     
-#  rabbitmq: 
-#    host: 192.168.35.27
-#    port: 5672
-#    username: admin
-#    password: 123456  
-##########################################################################################################  
-###########################################spring boot redis #############################################  
-##########################################################################################################   
-#  redis:   
-#    database: 0           # Redis数据库索引（默认为0）  
-#    host: 192.168.35.27   # Redis服务器地址  
-#    port: 6379            # Redis服务器连接端口  
-#    password:      #Redis服务器连接密码（默认为空）  
-#    timeout: 0            # 连接超时时间（毫秒）  
-#    pool:   
-#      max-idle: 8         # 连接池中的最大空闲连接  
-#      min-idle: 1         # 连接池中的最小空闲连接  
-#      max-active: 8       # 连接池最大连接数（使用负值表示没有限制）  
-#      max-wait: -1        # 连接池最大阻塞等待时间（使用负值表示没有限制）  
-##    sentinel:  
-##      master:   
-##      nodes: 
-#                    
-##############################################################################################
-############################# spring boot Mybatis config #####################################
-##############################################################################################    
-#mybatis:
-#    type-aliases-package: com.ly.cloud.weekplan.entity
-#    mapper-locations: classpath:mapper/*.xml
-##############################################################################################
-########################################## feign 配置 ##########################################
-############################################################################################## 
-#feign: 
-#  hystrix: 
-#    enabled: true 
+#############################################################################################
+############################## DataSource properties ########################################
+#############################################################################################
+spring:
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+
+  datasource:
+#    schema : classpath:init-sql/schema.sql
+#    data: classpath:init-sql/data.sql
+    continue-on-error : true
+    name: master
+    driver-class-name: oracle.jdbc.OracleDriver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url : jdbc:oracle:thin:@192.168.35.28:1521:orcl
+    username: lyoa
+    password: lyoa
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x' from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+#############################################################################################
+######################################## MQ config ##########################################
+#############################################################################################     
+  rabbitmq: 
+    host: 192.168.35.27
+    port: 5672
+    username: admin
+    password: 123456  
+#########################################################################################################  
+##########################################spring boot redis #############################################  
+#########################################################################################################   
+  redis:   
+    database: 0           # Redis数据库索引（默认为0）  
+    host: 192.168.35.27   # Redis服务器地址  
+    port: 6379            # Redis服务器连接端口  
+    password:      #Redis服务器连接密码（默认为空）  
+    timeout: 0            # 连接超时时间（毫秒）  
+    pool:   
+      max-idle: 8         # 连接池中的最大空闲连接  
+      min-idle: 1         # 连接池中的最小空闲连接  
+      max-active: 8       # 连接池最大连接数（使用负值表示没有限制）  
+      max-wait: -1        # 连接池最大阻塞等待时间（使用负值表示没有限制）  
+#    sentinel:  
+#      master:   
+#      nodes: 
+                    
+#############################################################################################
+############################ spring boot Mybatis config #####################################
+#############################################################################################    
+mybatis:
+    type-aliases-package: com.ly.cloud.weekplan.entity
+    mapper-locations: classpath:mapper/*.xml
+#############################################################################################
+######################################### feign 配置 ##########################################
+############################################################################################# 
+feign: 
+  hystrix: 
+    enabled: true 
