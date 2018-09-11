@@ -157,7 +157,7 @@ public class WeekController {
     	@ApiImplicitParam(paramType = "path", name = "id", dataType = "int", required = true, value = "周程id"),
     	@ApiImplicitParam(paramType = "path", name = "izt", dataType = "int", required = true, value = "周程的发布状态：0未发布，1已发布")
 	})
-	@RequestMapping(value = "{id}/{izt}/export", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/{izt}/export", method = RequestMethod.GET)
 	public WebResponse<List<WeekItemVo>> export(@PathVariable("id") String id,@PathVariable(name="izt",required=true)Integer izt,HttpServletResponse response){
 		try {
 			 List<WeekItemVo> list = weekItemServivce.selectList(id,izt);
