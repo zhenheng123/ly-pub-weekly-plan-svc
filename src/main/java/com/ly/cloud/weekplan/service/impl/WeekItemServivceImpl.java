@@ -28,6 +28,7 @@ import com.ly.cloud.weekplan.mapper.WeekItemMapper;
 import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
+import com.ly.cloud.weekplan.vo.WeekVo;
 
 /**
  * 
@@ -182,7 +183,26 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		return pageInfo;
 	}
 
-	
-	
-	
+	@Override
+	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception {
+		WeekEntity weekEntity = weekServivce.selectById(id);
+		if (weekEntity == null) {
+			return null;
+		}
+		List<WeekItemEntity> weekItemList = this.selectList(
+				new EntityWrapper<WeekItemEntity>()
+						.between("KSSJ", weekEntity.getKsrq(), weekEntity.getJsrq())
+						.eq(izt != -1, "ZT", izt)
+						.orderBy("KSSJ", true)
+				);
+		List<WeekItemVo> WeekItemVoList = new ArrayList<WeekItemVo>();
+		for (WeekItemEntity item : weekItemList) {
+			WeekItemVo weekItemVo = new WeekItemVo();
+			BeanUtils.copyProperties(item, weekItemVo);
+			weekItemVo.setXxrq(this.fmXXRQ(weekItemVo.getKssj()));
+			weekItemVo.setXxsj(this.fmXXSJ(weekItemVo.getKssj(), weekItemVo.getJssj()));
+			WeekItemVoList.add(weekItemVo);
+		}
+		return WeekItemVoList;
+	}
 }

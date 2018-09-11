@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ly.cloud.weekplan.common.utils.excel.ExcelField;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,6 +63,7 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "显示地点")
 	@NotBlank(message = "显示地点不能为空")
+	@ExcelField(title="地点", align=2, sort=20)
 	private String xsdd;
 
 	/**
@@ -82,6 +84,7 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "内容")
 	@NotBlank(message = "内容不能为空")
+	@ExcelField(title="内容", align=2, sort=20)
 	private String nr;
 
 	/**
@@ -94,6 +97,7 @@ public class WeekItemDto implements Serializable {
 	 * 主办部门名称
 	 */
 	@ApiModelProperty(value = "主办部门名称")
+	@ExcelField(title="主管领导和部门", align=2, sort=20)
 	private String zbbmmc;
 
 	/**
@@ -106,6 +110,7 @@ public class WeekItemDto implements Serializable {
 	 * 出席领导名称
 	 */
 	@ApiModelProperty(value = "出席领导名称")
+	@ExcelField(title="出席领导", align=2, sort=20)
 	private String cxldmc;
 
 	/**
@@ -118,6 +123,7 @@ public class WeekItemDto implements Serializable {
 	 * 参加人员名称
 	 */
 	@ApiModelProperty(value = "参加人员名称")
+	@ExcelField(title="参加人员", align=2, sort=20)
 	private String cjrymc;
 	
 	
@@ -154,6 +160,9 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "是否使用会议室0否，1是")
 	private Integer sfhys;
+	
+	
+	
 	
 
 }

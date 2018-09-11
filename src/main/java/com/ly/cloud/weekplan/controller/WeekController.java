@@ -5,7 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +27,15 @@ import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.CloudException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.utils.DateUtils;
+import com.ly.cloud.weekplan.common.utils.excel.ExportExcel;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
 import com.ly.cloud.weekplan.common.validator.group.AddGroup;
 import com.ly.cloud.weekplan.common.validator.group.UpdateGroup;
 import com.ly.cloud.weekplan.dto.WeekDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
+import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
+import com.ly.cloud.weekplan.vo.WeekItemVo;
 import com.ly.cloud.weekplan.vo.WeekVo;
 
 import io.swagger.annotations.Api;
@@ -43,6 +51,11 @@ public class WeekController {
 	
 	@Autowired
 	WeekServivce weekServivce;
+	
+	@Autowired
+	WeekItemServivce weekItemServivce;
+	
+	private static Logger logger = LoggerFactory.getLogger(WeekController.class);
 	
 	@ApiOperation("添加周程")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
@@ -139,5 +152,21 @@ public class WeekController {
 	}
 	
 	
-	
+	@ApiOperation(value = "导出广州市教育局周程安排数据", notes = "导出广州市教育局周程安排数据")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(paramType = "path", name = "id", dataType = "int", required = true, value = "周程id"),
+    	@ApiImplicitParam(paramType = "path", name = "izt", dataType = "int", required = true, value = "周程的发布状态：0未发布，1已发布")
+	})
+	@RequestMapping(value = "{id}/{izt}/export", method = RequestMethod.GET)
+	public WebResponse<List<WeekItemVo>> export(@PathVariable("id") String id,@PathVariable(name="izt",required=true)Integer izt,HttpServletResponse response){
+		try {
+			 List<WeekItemVo> list = weekItemServivce.selectList(id,izt);
+			 String fileName = "广州市教育局周程安排"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
+			 new ExportExcel("广州市教育局周程安排", WeekItemVo.class).setDataList(list).write(response, fileName).dispose();
+			 return null;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new WebResponse<List<WeekItemVo>>().failure(e.getMessage());
+		}
+	}	
 }

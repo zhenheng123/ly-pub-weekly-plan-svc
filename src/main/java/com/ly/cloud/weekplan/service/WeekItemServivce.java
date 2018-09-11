@@ -1,6 +1,7 @@
 package com.ly.cloud.weekplan.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
@@ -104,4 +105,20 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @date: 2018年6月21日
 	 */
 	public String fmZCRQ(Date kssj,Date jssj) throws Exception;
+
+	/**
+	 * 导出广州市教育局周程安排数据
+	 * Method Name:  selectList
+	 * Description:  
+	 * @param id
+	 * @param izt
+	 * @return 
+	 * @return List<WeekItemVo>
+	 * @throws Exception 
+	 * @exception 	
+	 * @author zhenheng
+	 * @mail zhenheng@ly-sky.com
+	 * @date: 2018年9月11日
+	 */
+	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception;
 }
