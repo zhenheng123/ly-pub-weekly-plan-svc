@@ -135,7 +135,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 
 	@Override
-	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, String nr, Integer zt)
+	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, WeekItemDto record)
 			throws Exception {
 		WeekEntity weekEntity=null;
 		Page<WeekItemEntity> page=new Page<WeekItemEntity>();
@@ -147,8 +147,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 						new Page<WeekItemEntity>(pageNum, pageSize), 
 						new EntityWrapper<WeekItemEntity>()
 							.between("KSSJ",DateUtils.setDayStar(weekEntity.getKsrq()) , DateUtils.setDayEnd(weekEntity.getJsrq()))
-							.like(StringUtils.isNotBlank(nr),"NR",nr)
-							.eq(zt!=null, "ZT", zt)
+							.like(StringUtils.isNotBlank(record.getNr()),"NR",record.getNr())
+							.eq(record.getZt()!=null, "ZT", record.getZt())
 							.orderBy("KSSJ", true)
 							.orderBy("PXH",false)
 						);
@@ -157,12 +157,16 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			page= this.selectPage(
 					new Page<WeekItemEntity>(pageNum, pageSize), 
 					new EntityWrapper<WeekItemEntity>()
-						.like(StringUtils.isNotBlank(nr),"NR",nr)
-						.eq(zt!=null, "ZT", zt)
+						.le(null != record.getJssj(), "JSSJ", record.getJssj())
+						.ge(null != record.getKssj(), "KSSJ", record.getKssj())
+						.like(StringUtils.isNotBlank(record.getNr()),"NR",record.getNr())
+						.eq(record.getHysbh()!=null, "HYSBH", record.getHysbh())
+						.eq(record.getZt()!=null, "ZT", record.getZt())
+						.eq(record.getSfhys()!=null, "SFHYS", record.getSfhys())
+						.orderBy("KSSJ", true)
+						.orderBy("PXH",false)
 					);
 		}
-		
-		
 		
 		PageInfo<WeekItemVo> pageInfo=new PageInfo<WeekItemVo>();
 		List<WeekItemVo> volist=new ArrayList<WeekItemVo>();

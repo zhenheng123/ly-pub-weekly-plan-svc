@@ -88,7 +88,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月15日
 	 */
-	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, String nr, Integer zt) throws Exception;
+	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, WeekItemDto record) throws Exception;
 
 	/**
 	 * 

@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
@@ -82,16 +82,10 @@ public class WeekItemController {
 			@ApiParam(value="周程ID，不是必须参数") 
 			String wid,
 			
-			@RequestParam(required=false)
-			@ApiParam("周程项名称，不是必须参数") 
-			String nr,
-			
-			@RequestParam(required=false)
-			@ApiParam("周程项状态，不给参数查询所有的，1有效，2无效")
-			Integer zt
+			@ModelAttribute WeekItemDto record
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, nr, zt));
+		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, record));
 	}
 
 	

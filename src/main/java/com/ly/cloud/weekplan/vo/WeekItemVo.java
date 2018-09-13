@@ -49,11 +49,13 @@ public class WeekItemVo{
 	/**
 	 * 开始时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date kssj;
 
 	/**
 	 * 结束时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date jssj;
 
 	/**
