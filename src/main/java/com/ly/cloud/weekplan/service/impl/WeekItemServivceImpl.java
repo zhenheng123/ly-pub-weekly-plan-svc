@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -135,7 +136,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 
 	@Override
-	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, WeekItemDto record)
+	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, Map<String,String> map)
 			throws Exception {
 		WeekEntity weekEntity=null;
 		Page<WeekItemEntity> page=new Page<WeekItemEntity>();
@@ -147,8 +148,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 						new Page<WeekItemEntity>(pageNum, pageSize), 
 						new EntityWrapper<WeekItemEntity>()
 							.between("KSSJ",DateUtils.setDayStar(weekEntity.getKsrq()) , DateUtils.setDayEnd(weekEntity.getJsrq()))
-							.like(StringUtils.isNotBlank(record.getNr()),"NR",record.getNr())
-							.eq(record.getZt()!=null, "ZT", record.getZt())
+							.like(StringUtils.isNotBlank(map.get("nr")),"NR",map.get("nr"))
+							.eq(map.get("zt")!=null, "ZT", map.get("zt"))
 							.orderBy("KSSJ", true)
 							.orderBy("PXH",false)
 						);
@@ -157,12 +158,12 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			page= this.selectPage(
 					new Page<WeekItemEntity>(pageNum, pageSize), 
 					new EntityWrapper<WeekItemEntity>()
-						.le(null != record.getJssj(), "JSSJ", record.getJssj())
-						.ge(null != record.getKssj(), "KSSJ", record.getKssj())
-						.like(StringUtils.isNotBlank(record.getNr()),"NR",record.getNr())
-						.eq(record.getHysbh()!=null, "HYSBH", record.getHysbh())
-						.eq(record.getZt()!=null, "ZT", record.getZt())
-						.eq(record.getSfhys()!=null, "SFHYS", record.getSfhys())
+						.le(null != map.get("jssj"), "JSSJ", DateUtils.stringToDate(map.get("jssj"), DateUtils.DATE_WITHOUTSEC_PATTERN24))
+						.ge(null != map.get("kssj"), "KSSJ", DateUtils.stringToDate(map.get("kssj"), DateUtils.DATE_WITHOUTSEC_PATTERN24))
+						.like(StringUtils.isNotBlank(map.get("nr")),"NR",map.get("nr"))
+						.eq(map.get("hysbh")!=null, "HYSBH", map.get("hysbh"))
+						.eq(map.get("zt")!=null, "ZT", map.get("zt"))
+						.eq(map.get("sfhys")!=null, "SFHYS", map.get("sfhys"))
 						.orderBy("KSSJ", true)
 						.orderBy("PXH",false)
 					);

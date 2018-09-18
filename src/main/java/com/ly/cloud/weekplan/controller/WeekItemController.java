@@ -1,6 +1,7 @@
 package com.ly.cloud.weekplan.controller;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +83,12 @@ public class WeekItemController {
 			@ApiParam(value="周程ID，不是必须参数") 
 			String wid,
 			
-			@ModelAttribute WeekItemDto record
+			@RequestParam(required=false)
+			@ApiParam(value="map封装的参数") 
+			Map<String,String> map
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, record));
+		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map));
 	}
 
 	

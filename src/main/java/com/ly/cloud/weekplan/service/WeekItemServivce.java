@@ -2,6 +2,7 @@ package com.ly.cloud.weekplan.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
@@ -88,7 +89,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月15日
 	 */
-	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, WeekItemDto record) throws Exception;
+	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, Map<String,String> map) throws Exception;
 
 	/**
 	 * 
