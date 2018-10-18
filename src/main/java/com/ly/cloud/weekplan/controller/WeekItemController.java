@@ -5,13 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
@@ -37,8 +31,8 @@ public class WeekItemController {
 	
 	@ApiOperation("添加周程项")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public WebResponse<Boolean> add(@RequestBody WeekItemDto weekItemDto) throws Exception {
-		weekItemServivce.addWeekItem(weekItemDto);
+	public WebResponse<Boolean> add(@RequestBody WeekItemDto weekItemDto, @RequestHeader("loginUserOrgId") String orgId) throws Exception {
+		weekItemServivce.addWeekItem(weekItemDto, orgId);
 		return new WebResponse<Boolean>().success(true);
 	}
 	
@@ -85,10 +79,14 @@ public class WeekItemController {
 			
 			@RequestParam(required=false)
 			@ApiParam(value="map封装的参数") 
-			Map<String,String> map
+			Map<String,String> map,
+
+			@RequestHeader("loginUserOrgId")
+			@ApiParam(value = "用户机构ID")
+			String orgId
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map));
+		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map, orgId));
 	}
 
 	
