@@ -70,7 +70,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		
 		
 		//判断是否使用了会议室
-		if(StringUtils.isBlank(weekItemDto.getHysbh())) {
+		if(StringUtils.isNotBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
 			weekItemEntity.setXsdd(weekItemDto.getHysbhmc());
 			if(weekItemDto.getJssj()!=null && weekItemDto.getJssj().before(weekItemDto.getKssj())) {
