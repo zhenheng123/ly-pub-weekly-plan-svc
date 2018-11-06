@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(scanBasePackages={"com.ly.cloud"})
 @EnableTransactionManagement  
 @EnableEurekaClient
-//@EnableFeignClients
-//@EnableCircuitBreaker 
+@EnableFeignClients
+@EnableCircuitBreaker
 public class WeekPlanServiceApplication {
 
 	public static void main(String[] args) {

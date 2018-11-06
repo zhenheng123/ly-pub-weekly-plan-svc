@@ -1,14 +1,12 @@
 package com.ly.cloud.weekplan.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
+import com.ly.cloud.exception.biz.BusinessException;
+import com.ly.cloud.web.utils.WebResponse;
+import com.ly.cloud.weekplan.client.DailyPlanClient;
+import com.ly.cloud.weekplan.dto.PushDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekMapper;
@@ -16,6 +14,16 @@ import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
 import com.ly.cloud.weekplan.vo.WeekVo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 
@@ -29,10 +37,23 @@ import com.ly.cloud.weekplan.vo.WeekVo;
  *
  */
 @Service
+@Slf4j
 public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implements WeekServivce {
+	/**
+	 * 未发布
+	 */
+	private final static int WEEK_PLAN_STATUS_UNPUBLISHED = 0;
+
+	/**
+	 * 已发布
+	 */
+	private final static int WEEK_PLAN_STATUS_PUBLISHED = 1;
 
 	@Autowired
 	WeekItemServivce weekItemServivce;
+
+	@Autowired
+	DailyPlanClient dailyPlanClient;
 
 	@Override
 	public WeekVo getById(String id, Integer izt) throws Exception {
@@ -62,6 +83,76 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 		weekVo.setXxrq(weekItemServivce.fmZCRQ(weekVo.getKsrq(), weekVo.getJsrq()));
 		weekVo.setWeekItemVoList(WeekItemVoList);
 		return weekVo;
+
+	}
+
+    @Override
+    public boolean update(WeekEntity newEntity) {
+		if (newEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {
+			WeekEntity oldEntity = this.selectById(newEntity.getBh());
+			if (oldEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) {//未发布转为发布
+				syncDailyPlan(false, newEntity);
+			} else if (oldEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {//原先就有发布，则清除旧日程数据
+				syncDailyPlan(true, newEntity);
+			} else {
+				throw new BusinessException("周程发布状态错误");
+			}
+		} else if (newEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED){
+			syncDailyPlan(true, newEntity);
+		}
+		return this.updateById(newEntity);
+    }
+
+	/**
+	 * 同步日程
+	 * @param deleteOldDate 是否删除旧数据
+	 * @param weekEntity 周程实体类
+	 */
+	void syncDailyPlan(boolean deleteOldDate, WeekEntity weekEntity) {
+		//删除旧数据
+		if (deleteOldDate) {
+			WebResponse<Boolean> res = dailyPlanClient.deleteByTaskId(weekEntity.getBh());//用周程编号进行删除
+            if (res == null) {
+                log.error("远程调用日程服务失败！");
+            } else if (!res.getMeta().isSuccess()) {
+				log.error("删除旧日程数据失败: {}", res.getMeta().getMessage());
+			}
+		}
+
+		//未发布制作删除旧数据操作
+        if (weekEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) return;
+
+		//获取周程项列表
+		PageInfo<WeekItemVo> weekItemVoPageInfo = null;
+		List<WeekItemVo> weekItemVoList;
+		try {
+			weekItemVoPageInfo = weekItemServivce.selectList(1, 0, weekEntity.getBh(), new HashMap<String, String>(), "-1");
+			if (weekItemVoPageInfo == null || weekItemVoPageInfo.getList() == null) {
+				throw new BusinessException("获取周程项列表失败");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+        //同步日程
+		List<PushDto> pushDtoList = new ArrayList<>();
+		weekItemVoList = weekItemVoPageInfo.getList();
+		for (WeekItemVo weekItemVo : weekItemVoList) {
+			List<String> userList = new ArrayList<>();
+			if (weekItemVo.getTxrybh() != null) {
+				userList = Arrays.asList(weekItemVo.getTxrybh().split(","));
+			}
+			//将周程编号作为任务编号
+			PushDto pushDto = new PushDto(userList, weekItemVo.getKssj(), weekItemVo.getJssj(), weekItemVo.getNr(), weekEntity.getBh(), weekItemVo.getXsdd());
+			pushDtoList.add(pushDto);
+		}
+		WebResponse<Boolean> batchPushRes = dailyPlanClient.batchPush(pushDtoList);
+		if (batchPushRes == null) {
+			log.error("远程调用日程服务失败！");
+		} else if (!batchPushRes.getMeta().isSuccess()) {
+			log.error("同步日程失败: {}", batchPushRes.getMeta().getMessage());
+		}
+
 
 	}
 
