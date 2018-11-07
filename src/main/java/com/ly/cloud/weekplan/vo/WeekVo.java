@@ -44,13 +44,13 @@ public class WeekVo implements Serializable {
     /**
      * 开始日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date ksrq;
 
     /**
      * 结束日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date jsrq;
     
     /**
