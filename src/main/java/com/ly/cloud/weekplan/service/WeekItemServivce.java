@@ -6,9 +6,11 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
+import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
+import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
 
 /**
@@ -124,4 +126,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @date: 2018年9月11日
 	 */
 	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception;
+
+	/**周程会议室检查冲突*/
+	public List<MeetingInfoVo> conflict(WeekItemDto weekItemDto) throws BusinessException;
 }

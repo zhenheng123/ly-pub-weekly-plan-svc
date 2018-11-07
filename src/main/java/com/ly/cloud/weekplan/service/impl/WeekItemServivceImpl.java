@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,15 +20,20 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.CloudException;
+import com.ly.cloud.exception.biz.BusinessException;
+import com.ly.cloud.web.utils.WebResponse;
+import com.ly.cloud.weekplan.client.MeetingClient;
 import com.ly.cloud.weekplan.common.utils.DateUtils;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
 import com.ly.cloud.weekplan.common.validator.group.AddGroup;
+import com.ly.cloud.weekplan.dto.MeetingInfoDto;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekItemMapper;
 import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
+import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
 
 /**
@@ -46,6 +52,11 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	@Autowired
 	WeekServivce weekServivce;
 	
+	@Autowired
+	private WeekItemMapper weekItemMapper;
+	
+	@Autowired
+	private MeetingClient meetingClient;
 	/**
 	 * (non-Javadoc)
 	 * Title: addWeekItem
@@ -211,5 +222,31 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			WeekItemVoList.add(weekItemVo);
 		}
 		return WeekItemVoList;
+	}
+
+	@Override
+	public List<MeetingInfoVo> conflict(WeekItemDto weekItemDto) throws BusinessException{
+		List<MeetingInfoVo> list = new ArrayList<>();
+		//查询周程会议室是否被占用
+		List<WeekItemVo> weekItemVos = weekItemMapper.conflict(weekItemDto);
+		if(null == weekItemVos || weekItemVos.size() == 0 ) {
+			//远程调用会议检查冲突接口
+			Map<String,Object> map = new HashMap<>();
+			map.put("hysbh", weekItemDto.getHysbh());
+			map.put("kssj", DateUtils.format(weekItemDto.getKssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			map.put("jssj", DateUtils.format(weekItemDto.getJssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			WebResponse<List<MeetingInfoVo>> result = meetingClient.conflictCheck(map);
+			if(null != result && null != result.getData()) {
+				return result.getData();
+			}
+		}
+		for(WeekItemVo vo:weekItemVos) {
+			MeetingInfoVo meetingInfoVo = new MeetingInfoVo();
+			meetingInfoVo.setHymc(vo.getNr());
+			meetingInfoVo.setKssj(DateUtils.format(weekItemDto.getKssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			meetingInfoVo.setJssj(DateUtils.format(weekItemDto.getJssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			list.add(meetingInfoVo);
+		}
+		return list;
 	}
 }

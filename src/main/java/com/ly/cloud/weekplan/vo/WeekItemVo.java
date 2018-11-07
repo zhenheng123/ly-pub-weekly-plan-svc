@@ -2,15 +2,9 @@ package com.ly.cloud.weekplan.vo;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ly.cloud.weekplan.common.utils.excel.ExcelField;
-import com.ly.cloud.weekplan.dto.WeekItemDto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -148,5 +142,9 @@ public class WeekItemVo{
 	 * 周程发布id
 	 */
 	private String wid;
+	/**
+	 * 机构编号
+	 */
+	private String orgClass;
 	
 }

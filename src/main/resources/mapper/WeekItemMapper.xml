@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.cloud.weekplan.mapper.WeekItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="VoResultMap" type="com.ly.cloud.weekplan.vo.WeekItemVo">
+        <result column="BH" property="bh" />
+        <result column="KSSJ" property="kssj" />
+        <result column="JSSJ" property="jssj" />
+        <result column="XSDD" property="xsdd" />
+        <result column="HYSBH" property="hysbh" />
+        <result column="NR" property="nr" />
+        <result column="ZBBMBH" property="zbbmbh" />
+        <result column="ZBBMMC" property="zbbmmc" />
+        <result column="CXLDBH" property="cxldbh" />
+        <result column="CXLDMC" property="cxldmc" />
+        <result column="CJRYBH" property="cjrybh" />
+        <result column="CJRYMC" property="cjrymc" />
+        <result column="TXRYBH" property="txrybh" />
+        <result column="TXRYMC" property="txrymc" />
+        <result column="ZT" property="zt" />
+        <result column="PXH" property="pxh" />
+        <result column="SFHYS" property="sfhys" />
+        <result column="ORGCLASS" property="orgClass" />
+    </resultMap>
+    
+     <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+       t.BH,t.KSSJ,t.JSSJ,t.XSDD,t.HYSBH,t.NR ,t.ZBBMBH,t.ZBBMMC,t.CXLDBH,t.CXLDMC,t.CJRYBH
+       ,t.CJRYMC,t.TXRYBH,t.TXRYMC,t.ZT,t.PXH,t.SFHYS,t.ORGCLASS
+    </sql>
+    
+   
+    <!-- 会议室检查冲突 -->
+     <select id="conflict"  resultMap="VoResultMap">
+    	select <include refid="Base_Column_List"></include> from LY_BG_ZC_ZCTM t
+    	where t.HYSBH = #{vo.hysbh} and t.zt = 1
+		 <if test="vo.kssj!=null  and  vo.jssj!=null ">
+				and ((t.KSSJ between #{vo.kssj}  and #{vo.jssj}) or (t.JSSJ between #{vo.kssj}  and #{vo.jssj}) or (#{vo.kssj} between t.KSSJ and t.JSSJ) or (#{vo.jssj} between t.KSSJ and t.JSSJ))
+		</if>
+    </select>
+    
+    
+    
+</mapper>

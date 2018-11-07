@@ -1,8 +1,10 @@
 package com.ly.cloud.weekplan.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import com.ly.cloud.weekplan.common.validator.group.UpdateGroup;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.service.WeekItemServivce;
+import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
 
 import io.swagger.annotations.Api;
@@ -23,6 +26,8 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/weekitem")
 public class WeekItemController {
+	
+	private static Logger logger = LoggerFactory.getLogger(WeekItemController.class);
 	
 	@Autowired
 	WeekItemServivce weekItemServivce;
@@ -88,6 +93,16 @@ public class WeekItemController {
 		) throws Exception {
 		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map, orgId));
 	}
-
 	
+	@ApiOperation("周程会议室检查冲突")
+    @RequestMapping(value="/conflict/check",method = RequestMethod.GET)
+    public WebResponse<List<MeetingInfoVo>> conflict(@ModelAttribute WeekItemDto weekItemDto) throws Exception{
+		try {
+			List<MeetingInfoVo> result = weekItemServivce.conflict(weekItemDto);
+			return new WebResponse<List<MeetingInfoVo>>().success(result);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new WebResponse<List<MeetingInfoVo>>().failure(e.getMessage());
+		}
+    }	
 }
