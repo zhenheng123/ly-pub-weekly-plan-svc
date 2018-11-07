@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -78,7 +79,13 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			}
 		}
 		//是否设置了提醒人员
-		
+
+		//同步日程
+		List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(weekItemDto);
+		for (WeekEntity weekEntity : weekEntities) {
+			weekServivce.syncDailyPlan(true, weekEntity);
+		}
+
 		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
 		return true;
@@ -136,7 +143,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 
 	@Override
-	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, Map<String,String> map, String orgId)
+	public PageInfo<WeekItemVo> selectPage(int pageNum, int pageSize, String wid, Map<String,String> map, String orgId)
 			throws Exception {
 		WeekEntity weekEntity=null;
 		Page<WeekItemEntity> page=new Page<WeekItemEntity>();
@@ -191,6 +198,15 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	}
 
 	@Override
+	public List<WeekItemEntity> selectByWeekPlanId(String weekPlanId) {
+		WeekEntity weekEntity = weekServivce.selectById(weekPlanId);
+		if (weekEntity == null || weekEntity.getKsrq() == null || weekEntity.getJsrq() == null) return null;
+		Wrapper<WeekItemEntity> wrapper = new EntityWrapper<>();
+		wrapper.between("KSSJ", DateUtils.setDayStar(weekEntity.getKsrq()), DateUtils.setDayEnd(weekEntity.getJsrq()));
+		return selectList(wrapper);
+	}
+
+	@Override
 	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception {
 		WeekEntity weekEntity = weekServivce.selectById(id);
 		if (weekEntity == null) {
@@ -211,5 +227,18 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			WeekItemVoList.add(weekItemVo);
 		}
 		return WeekItemVoList;
+	}
+
+	@Override
+	public boolean update(WeekItemDto weekItemDto) {
+		//同步日程
+		List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(weekItemDto);
+		for (WeekEntity weekEntity : weekEntities) {
+			weekServivce.syncDailyPlan(true, weekEntity);
+		}
+
+		WeekItemEntity weekItemEntity = new WeekItemEntity();
+		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
+		return updateById(weekItemEntity);
 	}
 }

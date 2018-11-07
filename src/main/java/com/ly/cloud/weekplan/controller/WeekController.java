@@ -78,8 +78,8 @@ public class WeekController {
 	@ApiOperation("删除或批量删除周程")
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	public WebResponse<Boolean> delete(@RequestBody String[] ids){
-		weekServivce.deleteBatchIds(Arrays.asList(ids));
-		return new WebResponse<Boolean>().success(true);
+		boolean result = weekServivce.delete(ids);
+		return new WebResponse<Boolean>().success(result);
 	}
 	
 	

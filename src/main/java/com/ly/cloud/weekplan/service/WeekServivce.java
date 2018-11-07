@@ -1,8 +1,12 @@
 package com.ly.cloud.weekplan.service;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
+import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.WeekVo;
+
+import java.util.List;
 
 /**
  * 
@@ -45,4 +49,32 @@ public interface WeekServivce extends IService<WeekEntity> {
 	 * @date 2018年11月06日
 	 */
     boolean update(WeekEntity weekEntity);
+
+    /**
+     *
+     * Method Name: delete
+     * Description: 删除周程
+     * @param ids
+     * @return boolean
+     * @exception
+     * @author liufuhong
+     * @mail liufuhong@ly-sky.com
+     * @date 2018年11月07日
+     */
+	boolean delete(String[] ids);
+
+	/**
+	 *
+	 * Method Name: selectListByWeekItem
+	 * Description: 通过周程项查找周程列表
+	 * @param weekItemDto
+	 * @return java.util.List<com.ly.cloud.weekplan.entity.WeekEntity>
+	 * @exception
+	 * @author liufuhong
+	 * @mail liufuhong@ly-sky.com
+	 * @date 2018年11月07日
+	 */
+    List<WeekEntity> selectListByWeekItem(WeekItemDto weekItemDto);
+
+    void syncDailyPlan(boolean deleteOldDate, WeekEntity weekEntity);
 }

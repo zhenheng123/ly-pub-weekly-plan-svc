@@ -48,9 +48,7 @@ public class WeekItemController {
 	@RequestMapping(value="/update",method = RequestMethod.POST)
 	public WebResponse<Boolean> update(@RequestBody WeekItemDto weekItemDto) throws Exception{
 		ValidatorUtils.validateEntity(weekItemDto,UpdateGroup.class);
-		WeekItemEntity weekItemEntity = new WeekItemEntity();
-		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
-		weekItemServivce.updateById(weekItemEntity);
+		weekItemServivce.update(weekItemDto);
 		return new WebResponse<Boolean>().success(true);
 	}
 	
@@ -86,7 +84,7 @@ public class WeekItemController {
 			String orgId
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map, orgId));
+		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectPage( pageNum, pageSize, wid, map, orgId));
 	}
 
 	

@@ -1,12 +1,13 @@
 package com.ly.cloud.weekplan.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.client.DailyPlanClient;
 import com.ly.cloud.weekplan.dto.PushDto;
+import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekMapper;
@@ -19,10 +20,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,6 +47,11 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 	 * 已发布
 	 */
 	private final static int WEEK_PLAN_STATUS_PUBLISHED = 1;
+
+	/**
+	 * 有效周程项
+	 */
+	private final static int WEEK_PLAN_ITEM_STATUS_ACTIVE = 1;
 
 	@Autowired
 	WeekItemServivce weekItemServivce;
@@ -88,27 +92,51 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 
     @Override
     public boolean update(WeekEntity newEntity) {
-		if (newEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {
-			WeekEntity oldEntity = this.selectById(newEntity.getBh());
-			if (oldEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) {//未发布转为发布
-				syncDailyPlan(false, newEntity);
-			} else if (oldEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {//原先就有发布，则清除旧日程数据
+		if (newEntity.getZt() != null){
+			if (newEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {
+				WeekEntity oldEntity = this.selectById(newEntity.getBh());
+				if (oldEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) {//未发布转为发布
+					syncDailyPlan(false, newEntity);
+				} else if (oldEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {//原先就有发布，则清除旧日程数据
+					syncDailyPlan(true, newEntity);
+				} else {
+					throw new BusinessException("周程发布状态错误");
+				}
+			} else if (newEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED){
 				syncDailyPlan(true, newEntity);
-			} else {
-				throw new BusinessException("周程发布状态错误");
 			}
-		} else if (newEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED){
-			syncDailyPlan(true, newEntity);
 		}
 		return this.updateById(newEntity);
     }
 
-	/**
+	@Override
+	public boolean delete(String[] ids) {
+		WeekEntity weekEntity = new WeekEntity();
+		for (String id : ids) {
+			weekEntity.setBh(id);
+			syncDailyPlan(true,weekEntity);
+		}
+		return deleteBatchIds(Arrays.asList(ids));
+	}
+
+    @Override
+    public List<WeekEntity> selectListByWeekItem(WeekItemDto weekItemDto) {
+		List<WeekEntity> weekEntities = new ArrayList<>();
+		if (weekItemDto == null || weekItemDto.getKssj() == null || weekItemDto.getJssj() == null)
+			return weekEntities;
+		Wrapper<WeekEntity> wrapper = new EntityWrapper<>();
+		wrapper.le("KSRQ", weekItemDto.getKssj())
+				.ge("JSRQ", weekItemDto.getKssj())
+				.eq("ZT", WEEK_PLAN_STATUS_PUBLISHED);
+        return selectList(wrapper);
+    }
+
+    /**
 	 * 同步日程
 	 * @param deleteOldDate 是否删除旧数据
 	 * @param weekEntity 周程实体类
 	 */
-	void syncDailyPlan(boolean deleteOldDate, WeekEntity weekEntity) {
+	public void syncDailyPlan(boolean deleteOldDate, WeekEntity weekEntity) {
 		//删除旧数据
 		if (deleteOldDate) {
 			WebResponse<Boolean> res = dailyPlanClient.deleteByTaskId(weekEntity.getBh());//用周程编号进行删除
@@ -119,31 +147,27 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 			}
 		}
 
-		//未发布制作删除旧数据操作
+		//未发布只做删除旧数据操作
         if (weekEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) return;
 
 		//获取周程项列表
-		PageInfo<WeekItemVo> weekItemVoPageInfo = null;
-		List<WeekItemVo> weekItemVoList;
+		List<WeekItemVo> weekItemVos = null;
 		try {
-			weekItemVoPageInfo = weekItemServivce.selectList(1, 0, weekEntity.getBh(), new HashMap<String, String>(), "-1");
-			if (weekItemVoPageInfo == null || weekItemVoPageInfo.getList() == null) {
-				throw new BusinessException("获取周程项列表失败");
-			}
+			weekItemVos = weekItemServivce.selectList(weekEntity.getBh(), WEEK_PLAN_ITEM_STATUS_ACTIVE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-        //同步日程
+		//同步日程
 		List<PushDto> pushDtoList = new ArrayList<>();
-		weekItemVoList = weekItemVoPageInfo.getList();
-		for (WeekItemVo weekItemVo : weekItemVoList) {
+		for (WeekItemVo weekItemVo : weekItemVos) {
 			List<String> userList = new ArrayList<>();
 			if (weekItemVo.getTxrybh() != null) {
 				userList = Arrays.asList(weekItemVo.getTxrybh().split(","));
 			}
 			//将周程编号作为任务编号
-			PushDto pushDto = new PushDto(userList, weekItemVo.getKssj(), weekItemVo.getJssj(), weekItemVo.getNr(), weekEntity.getBh(), weekItemVo.getXsdd());
+			PushDto pushDto = new PushDto(userList, weekItemVo.getKssj(), weekItemVo.getJssj(),
+					weekItemVo.getNr(), weekEntity.getBh(), weekItemVo.getXsdd());
 			pushDtoList.add(pushDto);
 		}
 		WebResponse<Boolean> batchPushRes = dailyPlanClient.batchPush(pushDtoList);
@@ -152,8 +176,6 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 		} else if (!batchPushRes.getMeta().isSuccess()) {
 			log.error("同步日程失败: {}", batchPushRes.getMeta().getMessage());
 		}
-
-
 	}
 
 }
