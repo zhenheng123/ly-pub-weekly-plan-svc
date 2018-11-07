@@ -144,4 +144,9 @@ public class WeekItemVo{
 	 */
 	private Integer sfhys;
 	
+	/**
+	 * 周程发布id
+	 */
+	private String wid;
+	
 }
