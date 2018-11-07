@@ -90,7 +90,7 @@ public class WeekController {
 		ValidatorUtils.validateEntity(weekDto,UpdateGroup.class);
 		WeekEntity weekEntity = new WeekEntity();
 		BeanUtils.copyProperties(weekDto, weekEntity);
-		weekServivce.updateById(weekEntity);
+		weekServivce.update(weekEntity);
 		return new WebResponse<Boolean>().success(true);
 	}
 	

@@ -136,7 +136,11 @@ public class WeekItemEntity implements Serializable {
 	 */
 	@TableField(value = "SFHYS")
 	private Integer sfhys;
-	
-	
+
+	/**
+	 * 所属机构
+	 */
+	@TableField(value = "ORGCLASS")
+	private String orgClass;
 
 }

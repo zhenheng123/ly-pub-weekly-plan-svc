@@ -33,4 +33,16 @@ public interface WeekServivce extends IService<WeekEntity> {
 	 */
 	public WeekVo getById(String id, Integer izt) throws Exception;
 
+	/**
+	 *
+	 * Method Name: update
+	 * Description: 更新周程
+	 * @param weekEntity
+	 * @return boolean
+	 * @exception
+	 * @author liufuhong
+	 * @mail liufuhong@ly-sky.com
+	 * @date 2018年11月06日
+	 */
+    boolean update(WeekEntity weekEntity);
 }

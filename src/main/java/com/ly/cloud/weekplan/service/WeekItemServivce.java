@@ -29,7 +29,8 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * Method Name: addWeekItem Description: 添加周程项服务类
 	 * 
 	 * @param weekItemDto
-	 * @return
+	 * @param orgId
+     * @return
 	 * @throws Exception
 	 * @return boolean
 	 * @exception @author
@@ -37,7 +38,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月13日
 	 */
-	public boolean addWeekItem(WeekItemDto weekItemDto) throws Exception;
+	public boolean addWeekItem(WeekItemDto weekItemDto, String orgId) throws Exception;
 	
 	
 	/**
@@ -77,11 +78,12 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * 
 	 * Method Name:  selectList
 	 * Description:  分页获取周程项
-	 * @param pageNum 
-	 * @param pageSize
-	 * @param wid 周程ID
 	 * @param nr 周程项内容
 	 * @param zt 周程项状态
+	 * @param pageNum
+	 * @param pageSize
+	 * @param wid 周程ID
+	 * @param orgId
 	 * @return void
 	 * @throws Exception 
 	 * @exception 	
@@ -89,7 +91,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月15日
 	 */
-	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, Map<String,String> map) throws Exception;
+	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, Map<String, String> map, String orgId) throws Exception;
 
 	/**
 	 * 

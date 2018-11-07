@@ -420,7 +420,7 @@ public class ExportExcel {
 	public ExportExcel write(HttpServletResponse response, String fileName) throws IOException{
 		response.reset();
         response.setContentType("application/octet-stream; charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(fileName));
+        response.setHeader("Content-Disposition", "attachment; filename*=utf-8'zh_cn'"+URLEncoder.encode(fileName));
 		write(response.getOutputStream());
 		return this;
 	}

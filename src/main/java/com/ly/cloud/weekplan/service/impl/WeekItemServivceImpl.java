@@ -29,7 +29,6 @@ import com.ly.cloud.weekplan.mapper.WeekItemMapper;
 import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
-import com.ly.cloud.weekplan.vo.WeekVo;
 
 /**
  * 
@@ -55,22 +54,23 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	 * @author Liyewang
 	 * <p>
 	 * @param weekItemDto
+	 * @param orgId
 	 * @return
 	 * @throws Exception  WeekItemServivceImpl
-	 * @see com.ly.cloud.weekplan.service.WeekItemServivce#addWeekItem(com.ly.cloud.weekplan.dto.WeekItemDto)
+	 * @see WeekItemServivce#addWeekItem(WeekItemDto, String)
 	 */
 	@Override
-	public boolean addWeekItem(WeekItemDto weekItemDto) throws Exception {
+	public boolean addWeekItem(WeekItemDto weekItemDto, String orgId) throws Exception {
 		ValidatorUtils.validateEntity(weekItemDto,AddGroup.class);
 		
 		
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
-		
+		weekItemEntity.setOrgClass(orgId);
 		
 		
 		//判断是否使用了会议室
-		if(StringUtils.isBlank(weekItemDto.getHysbh())) {
+		if(StringUtils.isNotBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
 			weekItemEntity.setXsdd(weekItemDto.getHysbhmc());
 			if(weekItemDto.getJssj()!=null && weekItemDto.getJssj().before(weekItemDto.getKssj())) {
@@ -136,7 +136,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 
 	@Override
-	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, Map<String,String> map)
+	public PageInfo<WeekItemVo> selectList(int pageNum, int pageSize, String wid, Map<String,String> map, String orgId)
 			throws Exception {
 		WeekEntity weekEntity=null;
 		Page<WeekItemEntity> page=new Page<WeekItemEntity>();
@@ -150,6 +150,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 							.between("KSSJ",DateUtils.setDayStar(weekEntity.getKsrq()) , DateUtils.setDayEnd(weekEntity.getJsrq()))
 							.like(StringUtils.isNotBlank(map.get("nr")),"NR",map.get("nr"))
 							.eq(map.get("zt")!=null, "ZT", map.get("zt"))
+							.eq((orgId!=null)&&(!orgId.equals("-1")), "ORGCLASS", orgId)
 							.orderBy("KSSJ", true)
 							.orderBy("PXH",false)
 						);
@@ -164,6 +165,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 						.eq(map.get("hysbh")!=null, "HYSBH", map.get("hysbh"))
 						.eq(map.get("zt")!=null, "ZT", map.get("zt"))
 						.eq(map.get("sfhys")!=null, "SFHYS", map.get("sfhys"))
+						.eq((orgId!=null)&&(!orgId.equals("-1")), "ORGCLASS", orgId)
 						.orderBy("KSSJ", true)
 						.orderBy("PXH",false)
 					);
