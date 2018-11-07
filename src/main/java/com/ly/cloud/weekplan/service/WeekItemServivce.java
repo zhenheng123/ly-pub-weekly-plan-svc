@@ -7,7 +7,6 @@ import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.biz.BusinessException;
-import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
@@ -93,7 +92,24 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月15日
 	 */
-	public PageInfo<WeekItemVo>selectList(int pageNum, int pageSize, String wid, Map<String, String> map, String orgId) throws Exception;
+	public PageInfo<WeekItemVo>selectPage(int pageNum, int pageSize, String wid, Map<String, String> map, String orgId) throws Exception;
+
+	/**
+	 *
+	 * Method Name: selectPage
+	 * Description: 查询周程项列表
+	 * @param pageNum
+	 * @param pageSize
+	 * @param weekPlanId
+	 * @param map
+	 * @param orgId
+	 * @return com.ly.cloud.common.mybatisplus.plugins.PageInfo<com.ly.cloud.weekplan.vo.WeekItemVo>
+	 * @exception
+	 * @author liufuhong
+	 * @mail liufuhong@ly-sky.com
+	 * @date 2018年11月07日
+	 */
+	public List<WeekItemEntity> selectByWeekPlanId(String weekPlanId);
 
 	/**
 	 * 
@@ -127,6 +143,23 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 */
 	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception;
 
+
 	/**周程会议室检查冲突*/
 	public List<MeetingInfoVo> conflict(WeekItemDto weekItemDto) throws BusinessException;
+	
+	/**
+	 *
+	 * Method Name: update
+	 * Description: 更新周程项
+	 * @param weekItemEntity
+	 * @return boolean
+	 * @exception
+	 * @author liufuhong
+	 * @mail liufuhong@ly-sky.com
+	 * @date 2018年11月07日
+	 */
+    boolean update(WeekItemDto weekItemEntity);
+
+	boolean deleteBatchIds(String[] ids);
+
 }

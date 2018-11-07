@@ -44,7 +44,7 @@ public class WeekItemController {
 	@ApiOperation("删除或批量删除周程项")
 	@RequestMapping(value="/delete", method = RequestMethod.POST)
 	public WebResponse<Boolean> delete(@RequestBody String[] ids){
-		weekItemServivce.deleteBatchIds(Arrays.asList(ids));
+		weekItemServivce.deleteBatchIds(ids);
 		return new WebResponse<Boolean>().success(true);
 	}
 	
@@ -53,9 +53,7 @@ public class WeekItemController {
 	@RequestMapping(value="/update",method = RequestMethod.POST)
 	public WebResponse<Boolean> update(@RequestBody WeekItemDto weekItemDto) throws Exception{
 		ValidatorUtils.validateEntity(weekItemDto,UpdateGroup.class);
-		WeekItemEntity weekItemEntity = new WeekItemEntity();
-		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
-		weekItemServivce.updateById(weekItemEntity);
+		weekItemServivce.update(weekItemDto);
 		return new WebResponse<Boolean>().success(true);
 	}
 	
@@ -91,7 +89,7 @@ public class WeekItemController {
 			String orgId
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectList( pageNum, pageSize, wid, map, orgId));
+		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectPage( pageNum, pageSize, wid, map, orgId));
 	}
 	
 	@ApiOperation("周程会议室检查冲突")
