@@ -154,4 +154,6 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @date 2018年11月07日
 	 */
     boolean update(WeekItemDto weekItemEntity);
+
+	boolean deleteBatchIds(String[] ids);
 }

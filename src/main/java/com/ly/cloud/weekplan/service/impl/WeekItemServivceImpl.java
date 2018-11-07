@@ -81,10 +81,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		//是否设置了提醒人员
 
 		//同步日程
-		List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(weekItemDto);
-		for (WeekEntity weekEntity : weekEntities) {
-			weekServivce.syncDailyPlan(true, weekEntity);
-		}
+		syncDailyPlan(true, weekItemEntity);
 
 		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
@@ -231,14 +228,33 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 
 	@Override
 	public boolean update(WeekItemDto weekItemDto) {
-		//同步日程
-		List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(weekItemDto);
-		for (WeekEntity weekEntity : weekEntities) {
-			weekServivce.syncDailyPlan(true, weekEntity);
-		}
-
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
+
+		//同步日程
+		syncDailyPlan(true, weekItemEntity);
+
 		return updateById(weekItemEntity);
+	}
+
+	@Override
+	public boolean deleteBatchIds(String[] ids) {
+		for (String id : ids) {
+			WeekItemEntity weekItemEntity = selectById(id);
+			syncDailyPlan(true, weekItemEntity);
+		}
+		return false;
+	}
+
+	/**
+	 * 同步日程数据
+	 * @param deleteOldData 是否删除旧日程
+	 * @param weekItemEntity 周程项实体类
+	 */
+	void syncDailyPlan(boolean deleteOldData, WeekItemEntity weekItemEntity) {
+		List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(weekItemEntity);
+		for (WeekEntity weekEntity : weekEntities) {
+			weekServivce.syncDailyPlan(deleteOldData, weekEntity);
+		}
 	}
 }

@@ -120,13 +120,13 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 	}
 
     @Override
-    public List<WeekEntity> selectListByWeekItem(WeekItemDto weekItemDto) {
+    public List<WeekEntity> selectListByWeekItem(WeekItemEntity weekItemEntity) {
 		List<WeekEntity> weekEntities = new ArrayList<>();
-		if (weekItemDto == null || weekItemDto.getKssj() == null || weekItemDto.getJssj() == null)
+		if (weekItemEntity == null || weekItemEntity.getKssj() == null || weekItemEntity.getJssj() == null)
 			return weekEntities;
 		Wrapper<WeekEntity> wrapper = new EntityWrapper<>();
-		wrapper.le("KSRQ", weekItemDto.getKssj())
-				.ge("JSRQ", weekItemDto.getKssj())
+		wrapper.le("KSRQ", weekItemEntity.getKssj())
+				.ge("JSRQ", weekItemEntity.getKssj())
 				.eq("ZT", WEEK_PLAN_STATUS_PUBLISHED);
         return selectList(wrapper);
     }
@@ -157,6 +157,7 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (weekItemVos == null) return;
 
 		//同步日程
 		List<PushDto> pushDtoList = new ArrayList<>();

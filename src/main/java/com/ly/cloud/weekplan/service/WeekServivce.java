@@ -67,14 +67,14 @@ public interface WeekServivce extends IService<WeekEntity> {
 	 *
 	 * Method Name: selectListByWeekItem
 	 * Description: 通过周程项查找周程列表
-	 * @param weekItemDto
+	 * @param weekItemEntity
 	 * @return java.util.List<com.ly.cloud.weekplan.entity.WeekEntity>
 	 * @exception
 	 * @author liufuhong
 	 * @mail liufuhong@ly-sky.com
 	 * @date 2018年11月07日
 	 */
-    List<WeekEntity> selectListByWeekItem(WeekItemDto weekItemDto);
+    List<WeekEntity> selectListByWeekItem(WeekItemEntity weekItemEntity);
 
     void syncDailyPlan(boolean deleteOldDate, WeekEntity weekEntity);
 }
