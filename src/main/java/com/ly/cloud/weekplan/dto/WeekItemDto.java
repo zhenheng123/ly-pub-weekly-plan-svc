@@ -1,21 +1,15 @@
 package com.ly.cloud.weekplan.dto;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
-import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ly.cloud.weekplan.common.utils.excel.ExcelField;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -29,12 +23,12 @@ import lombok.Data;
  */
 @ApiModel(value = "周程项表单")
 @Data
-public class WeekItemDto {
+public class WeekItemDto implements Serializable {
 
 	/**
 	 * @Fields serialVersionUID :
 	 */
-//	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 主键
