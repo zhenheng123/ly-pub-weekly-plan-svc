@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -263,7 +264,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	}
 	
 	
-	public boolean update(WeekItemDto weekItemDto) {
+	public boolean update(WeekItemUpdateDto weekItemDto) {
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
 

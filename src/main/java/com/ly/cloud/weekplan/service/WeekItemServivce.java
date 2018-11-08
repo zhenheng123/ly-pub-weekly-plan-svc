@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
+import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
@@ -158,7 +159,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail liufuhong@ly-sky.com
 	 * @date 2018年11月07日
 	 */
-    boolean update(WeekItemDto weekItemEntity);
+    boolean update(WeekItemUpdateDto weekItemEntity);
 
 	boolean deleteBatchIds(String[] ids);
 

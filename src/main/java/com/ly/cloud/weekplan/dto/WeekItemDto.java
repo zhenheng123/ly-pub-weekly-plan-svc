@@ -29,12 +29,12 @@ import lombok.Data;
  */
 @ApiModel(value = "周程项表单")
 @Data
-public class WeekItemDto implements Serializable {
+public class WeekItemDto {
 
 	/**
 	 * @Fields serialVersionUID :
 	 */
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 主键
@@ -47,15 +47,15 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "开始时间",example="2018-6-13 12:00")
 	@NotNull(message = "开始时间不能为空")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Date kssj;
 
-	/**
-	 * 结束时间
-	 */
-	@ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
-	private Date jssj;
+    /**
+     * 结束时间
+     */
+    @ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date jssj;
 
 	/**
 	 * 显示地点
