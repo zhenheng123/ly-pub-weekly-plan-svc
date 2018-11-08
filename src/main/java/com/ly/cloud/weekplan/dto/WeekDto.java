@@ -1,17 +1,14 @@
 package com.ly.cloud.weekplan.dto;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
+import com.ly.cloud.weekplan.common.validator.group.AddGroup;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.ly.cloud.weekplan.common.validator.group.AddGroup;
-
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -81,5 +78,11 @@ public class WeekDto implements Serializable {
      */
     @ApiModelProperty(value = "所属机构")
     private String orgclass;
+
+    /**
+     * 审批状态: 1.待审批,2.审批中,3.审批完毕
+     */
+    @ApiModelProperty(value = "审批状态: 1.待审批,2.审批中,3.审批完毕")
+    private String approvalStatus;
 
 }

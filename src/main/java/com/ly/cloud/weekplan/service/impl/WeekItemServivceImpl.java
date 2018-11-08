@@ -21,6 +21,7 @@ import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +43,8 @@ import java.util.*;
  *
  */
 @Service
+@Slf4j
+@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEntity> implements WeekItemServivce {
 
 	@Autowired
@@ -85,16 +88,15 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		}
 		//是否设置了提醒人员
 
-		//同步日程
-		syncDailyPlan(true, weekItemEntity);
-
 		weekItemEntity.setBh(UUID.randomUUID().toString().replaceAll("-", ""));
 		this.insert(weekItemEntity);
+		//同步日程
+		syncDailyPlan(true, weekItemEntity);
 		return true;
 	} 
 
 	@Override
-	public String fmXXSJ(Date kssj, Date jssj) throws Exception {
+	public String fmXXSJ(Date kssj, Date jssj) {
 		String reStr="";
 		Calendar calendar=Calendar.getInstance();
     	calendar.setTime(kssj);
@@ -117,7 +119,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	}
 
 	@Override
-	public String fmXXRQ(Date kssj) throws Exception {
+	public String fmXXRQ(Date kssj) {
 		String reStr="";
 		DateTime dateTime = new DateTime(kssj);
 		reStr=dateTime.getMonthOfYear()+"月"+dateTime.getDayOfMonth()+"日";
@@ -209,7 +211,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	}
 
 	@Override
-	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception {
+	public List<WeekItemVo> selectList(String id, Integer izt) {
 		WeekEntity weekEntity = weekServivce.selectById(id);
 		if (weekEntity == null) {
 			return null;
@@ -270,11 +272,17 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 
 	@Override
 	public boolean deleteBatchIds(String[] ids) {
+		HashSet<WeekEntity> set = new HashSet<>();
 		for (String id : ids) {
-			WeekItemEntity weekItemEntity = selectById(id);
-			syncDailyPlan(true, weekItemEntity);
+			List<WeekEntity> weekEntities = weekServivce.selectListByWeekItem(selectById(id));
+			set.addAll(weekEntities);
 		}
-		return false;
+		//先删除数据再做日程同步
+		boolean result = deleteBatchIds(Arrays.asList(ids));
+		for (WeekEntity weekEntity : set) {
+			weekServivce.syncDailyPlan(true, weekEntity);
+		}
+		return result;
 	}
 
 	/**

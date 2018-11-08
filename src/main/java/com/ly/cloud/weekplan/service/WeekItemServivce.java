@@ -142,7 +142,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail zhenheng@ly-sky.com
 	 * @date: 2018年9月11日
 	 */
-	public List<WeekItemVo> selectList(String id, Integer izt) throws Exception;
+	public List<WeekItemVo> selectList(String id, Integer izt);
 
 
 	/**周程会议室检查冲突*/

@@ -7,7 +7,6 @@ import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.client.DailyPlanClient;
 import com.ly.cloud.weekplan.dto.PushDto;
-import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekMapper;
@@ -151,12 +150,7 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
         if (weekEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) return;
 
 		//获取周程项列表
-		List<WeekItemVo> weekItemVos = null;
-		try {
-			weekItemVos = weekItemServivce.selectList(weekEntity.getBh(), WEEK_PLAN_ITEM_STATUS_ACTIVE);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		List<WeekItemVo> weekItemVos = weekItemServivce.selectList(weekEntity.getBh(), WEEK_PLAN_ITEM_STATUS_ACTIVE);
 		if (weekItemVos == null) return;
 
 		//同步日程
