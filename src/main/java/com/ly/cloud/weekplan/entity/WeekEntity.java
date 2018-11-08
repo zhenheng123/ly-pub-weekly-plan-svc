@@ -1,13 +1,12 @@
 package com.ly.cloud.weekplan.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -72,5 +71,11 @@ public class WeekEntity implements Serializable {
      */
 	@TableField(value="ORGCLASS")
     private String orgclass;
+
+	/**
+	 * 审批状态: 1.待审批,2.审批中,3.审批完毕
+	 */
+	@TableField(value = "SPZT")
+	private String approvalStatus;
 
 }

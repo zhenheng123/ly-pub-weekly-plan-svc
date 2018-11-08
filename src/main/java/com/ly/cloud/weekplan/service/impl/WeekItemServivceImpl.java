@@ -1,21 +1,5 @@
 package com.ly.cloud.weekplan.service.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -29,6 +13,7 @@ import com.ly.cloud.weekplan.common.utils.DateUtils;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
 import com.ly.cloud.weekplan.common.validator.group.AddGroup;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
+import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.mapper.WeekItemMapper;
@@ -36,6 +21,15 @@ import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 
@@ -69,10 +63,10 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	 * @param orgId
 	 * @return
 	 * @throws Exception  WeekItemServivceImpl
-	 * @see WeekItemServivce#addWeekItem(WeekItemDto, String)
+	 * @see WeekItemServivce#addWeekItem(WeekItemUpdateDto, String)
 	 */
 	@Override
-	public boolean addWeekItem(WeekItemDto weekItemDto, String orgId) throws Exception {
+	public boolean addWeekItem(WeekItemUpdateDto weekItemDto, String orgId) throws Exception {
 		ValidatorUtils.validateEntity(weekItemDto,AddGroup.class);
 		
 		

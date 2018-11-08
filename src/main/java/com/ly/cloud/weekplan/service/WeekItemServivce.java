@@ -1,9 +1,5 @@
 package com.ly.cloud.weekplan.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.biz.BusinessException;
@@ -12,6 +8,10 @@ import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -40,7 +40,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	 * @mail Liyewang@ly-sky.com
 	 * @date: 2018年6月13日
 	 */
-	public boolean addWeekItem(WeekItemDto weekItemDto, String orgId) throws Exception;
+	public boolean addWeekItem(WeekItemUpdateDto weekItemDto, String orgId) throws Exception;
 	
 	
 	/**

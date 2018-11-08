@@ -38,7 +38,7 @@ public class WeekItemController {
 
 	@ApiOperation("添加周程项")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public WebResponse<Boolean> add(@RequestBody WeekItemDto weekItemDto, @RequestHeader("loginUserOrgId") String orgId) throws Exception {
+	public WebResponse<Boolean> add(@RequestBody WeekItemUpdateDto weekItemDto, @RequestHeader("loginUserOrgId") String orgId) throws Exception {
 		weekItemServivce.addWeekItem(weekItemDto, orgId);
 		return new WebResponse<Boolean>().success(true);
 	}
@@ -53,7 +53,7 @@ public class WeekItemController {
 	
 	@ApiOperation("修改周程项")
 	@RequestMapping(value="/update",method = RequestMethod.POST)
-	public WebResponse<Boolean> update(@RequestBody WeekItemDto weekItemDto) throws Exception{
+	public WebResponse<Boolean> update(@RequestBody WeekItemUpdateDto weekItemDto) throws Exception{
 		ValidatorUtils.validateEntity(weekItemDto,UpdateGroup.class);
 		weekItemServivce.update(weekItemDto);
 		return new WebResponse<Boolean>().success(true);
