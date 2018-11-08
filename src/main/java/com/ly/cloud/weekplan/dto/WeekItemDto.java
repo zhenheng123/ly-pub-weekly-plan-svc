@@ -47,16 +47,14 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "开始时间",example="2018-6-13 12:00")
 	@NotNull(message = "开始时间不能为空")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
-	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date kssj;
 
 	/**
 	 * 结束时间
 	 */
 	@ApiModelProperty(value = "结束时间" ,example="2018-6-13 14:00")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
-	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")
 	private Date jssj;
 
 	/**
