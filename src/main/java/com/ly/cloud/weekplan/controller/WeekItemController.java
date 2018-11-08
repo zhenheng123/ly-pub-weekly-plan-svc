@@ -1,26 +1,27 @@
 package com.ly.cloud.weekplan.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
 import com.ly.cloud.weekplan.common.validator.group.UpdateGroup;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
-import com.ly.cloud.weekplan.entity.WeekItemEntity;
+import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import com.ly.cloud.weekplan.service.WeekItemServivce;
+import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
+import com.ly.cloud.weekplan.vo.WeekItemPageVO;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Api(tags="周程项API")
 @RestController
@@ -28,12 +29,13 @@ import io.swagger.annotations.ApiParam;
 public class WeekItemController {
 	
 	private static Logger logger = LoggerFactory.getLogger(WeekItemController.class);
-	
+
 	@Autowired
 	WeekItemServivce weekItemServivce;
-	
-	
-	
+
+	@Autowired
+	WeekServivce weekServivce;
+
 	@ApiOperation("添加周程项")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public WebResponse<Boolean> add(@RequestBody WeekItemDto weekItemDto, @RequestHeader("loginUserOrgId") String orgId) throws Exception {
@@ -69,7 +71,7 @@ public class WeekItemController {
 	
 	@ApiOperation("分页周程项")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-	public WebResponse<PageInfo<WeekItemVo>> queryPageList(
+	public WebResponse<WeekItemPageVO> queryPageList(
 			@RequestParam 
 			int pageNum, 
 			
@@ -89,7 +91,9 @@ public class WeekItemController {
 			String orgId
 			
 		) throws Exception {
-		return new WebResponse<PageInfo<WeekItemVo>>().success(weekItemServivce.selectPage( pageNum, pageSize, wid, map, orgId));
+		String approvalStatus = weekServivce.selectById(wid).getApprovalStatus();
+		PageInfo<WeekItemVo> weekItemVoPageInfo = weekItemServivce.selectPage(pageNum, pageSize, wid, map, orgId);
+		return new WebResponse<WeekItemPageVO>().success(new WeekItemPageVO(approvalStatus, weekItemVoPageInfo));
 	}
 	
 	@ApiOperation("周程会议室检查冲突")
@@ -102,5 +106,5 @@ public class WeekItemController {
 			logger.error(e.getMessage(), e);
 			return new WebResponse<List<MeetingInfoVo>>().failure(e.getMessage());
 		}
-    }	
+    }
 }
