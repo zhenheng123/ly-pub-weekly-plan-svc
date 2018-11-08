@@ -263,11 +263,11 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	public boolean update(WeekItemUpdateDto weekItemDto) {
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
+        boolean result = updateById(weekItemEntity);
 
-		//同步日程
-		syncDailyPlan(true, weekItemEntity);
-
-		return updateById(weekItemEntity);
+        //同步日程
+        syncDailyPlan(true, weekItemEntity);
+        return result;
 	}
 
 	@Override

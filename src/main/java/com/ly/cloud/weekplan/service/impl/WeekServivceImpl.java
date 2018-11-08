@@ -91,6 +91,7 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 
     @Override
     public boolean update(WeekEntity newEntity) {
+		boolean result = this.updateById(newEntity);
 		if (newEntity.getZt() != null){
 			if (newEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {
 				WeekEntity oldEntity = this.selectById(newEntity.getBh());
@@ -105,17 +106,20 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 				syncDailyPlan(true, newEntity);
 			}
 		}
-		return this.updateById(newEntity);
+		return result;
     }
 
 	@Override
 	public boolean delete(String[] ids) {
-		WeekEntity weekEntity = new WeekEntity();
+		List<WeekEntity> weekEntities = new ArrayList<>();
 		for (String id : ids) {
+			WeekEntity weekEntity = new WeekEntity();
 			weekEntity.setBh(id);
-			syncDailyPlan(true,weekEntity);
+			weekEntities.add(weekEntity);
 		}
-		return deleteBatchIds(Arrays.asList(ids));
+		boolean result = deleteBatchIds(Arrays.asList(ids));
+		for (WeekEntity weekEntity : weekEntities) syncDailyPlan(true, weekEntity);
+		return result;
 	}
 
     @Override
