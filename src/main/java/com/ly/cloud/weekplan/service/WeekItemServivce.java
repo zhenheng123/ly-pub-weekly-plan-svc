@@ -163,4 +163,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 
 	boolean deleteBatchIds(String[] ids);
 
+	/**检查局领导冲突*/
+	public List<Map<String, Object>> getConflict(WeekItemDto weekItemDto, String orgId);
+
 }

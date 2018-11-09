@@ -35,10 +35,26 @@
      <select id="conflict"  resultMap="VoResultMap">
     	select <include refid="Base_Column_List"></include> from LY_BG_ZC_ZCTM t
     	where t.HYSBH = #{vo.hysbh} and t.zt = 1
-		 <if test="vo.kssj!=null  and  vo.jssj!=null ">
-				and ((t.KSSJ between #{vo.kssj}  and #{vo.jssj}) or (t.JSSJ between #{vo.kssj}  and #{vo.jssj}) or (#{vo.kssj} between t.KSSJ and t.JSSJ) or (#{vo.jssj} between t.KSSJ and t.JSSJ))
-		</if>
+		and ((t.KSSJ between #{vo.kssj}  and #{vo.jssj}) or (t.JSSJ between #{vo.kssj}  and #{vo.jssj}) or (#{vo.kssj} between t.KSSJ and t.JSSJ) or (#{vo.jssj} between t.KSSJ and t.JSSJ))
     </select>
+    
+     <!-- 查询该领导下在指定时间段是否有冲突的日程 -->
+    <select id="getConflict" resultType="java.util.Map">
+    	select t.ldxm,t.sx,t.kssj,t.jssj,t.dd ,decode(t.hybh,null,0,1) as type  from ly_bg_ldrc_rcb t
+      	where t.jgbh = #{orgId} and t.ldbh = #{leaderId}
+        and ((t.KSSJ between #{startTime}  and #{endTime}) or (t.JSSJ between #{startTime}  and #{endTime}) or (#{startTime} between t.KSSJ and t.JSSJ) or (#{endTime} between t.KSSJ and t.JSSJ))
+    </select> 
+    
+    <!-- 局领导是否有会议冲突 -->
+    <select id="getMeetingConflict" resultType="java.util.Map">
+      select t.hymc,t.kssj,t.jssj,t.hylxr,t.lxrdh,decode(t.hybh,null,0,1) as type from LY_BG_HYGL_HYXXB t left join LY_BG_HYGL_HYCYRY a on t.HYBH = a.HYBH 
+  	  where a.cyzbh = #{leaderId}  and a.SFYTZ = '1' and a.SFYQD = '0' and
+      ( (#{startTime} between t.KSSJ and t.JSSJ ) or (#{endTime} between t.KSSJ and t.JSSJ )
+        or 
+          <![CDATA[ 
+          (#{startTime} <= t.KSSJ and #{endTime} >=t.JSSJ))
+		  ]]> 
+    </select> 
     
     
     

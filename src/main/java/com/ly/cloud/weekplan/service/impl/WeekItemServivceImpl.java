@@ -1,5 +1,24 @@
 package com.ly.cloud.weekplan.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -21,16 +40,8 @@ import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -295,6 +306,29 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		for (WeekEntity weekEntity : weekEntities) {
 			weekServivce.syncDailyPlan(deleteOldData, weekEntity);
 		}
+	}
+	
+	@Override
+	public List<Map<String,Object>> getConflict(WeekItemDto weekItemDto, String orgId) throws BusinessException {
+		List<Map<String,Object>> list = new ArrayList<>();
+		String leaders = weekItemDto.getCxldbh();
+		// 检查出席领导是否存在局领导日程
+		if(StringUtils.isNotBlank(leaders)) {
+			for(String leaderId : leaders.split(",")) {
+				Map<String,Object> map = new HashMap<>();
+				map.put("leaderId", leaderId);
+				map.put("startTime", weekItemDto.getKssj());
+				map.put("endTime", weekItemDto.getJssj());
+				map.put("orgId", orgId);
+				List<Map<String,Object>> leaderList = weekItemMapper.getConflict(map);
+				if(null == leaderList || leaderList.size() ==0) {
+					//检查出席领导在这个时间段是否有待参加的会议
+					leaderList = weekItemMapper.getMeetingConflict(map);
+				}
+				list.addAll(leaderList);
+			}
+		}
+		return list;
 	}
 }
 
