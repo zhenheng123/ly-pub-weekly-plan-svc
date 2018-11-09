@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -79,6 +78,18 @@ public class WeekItemUpdateDto {
 	@NotBlank(message = "内容不能为空")
 	@ExcelField(title="内容", align=2, sort=20)
 	private String nr;
+
+	/**
+	 * 主管领导编号
+	 */
+	@ApiModelProperty(value = "主管领导编号")
+	private String zgldbh;
+
+	/**
+	 * 主管领导名称
+	 */
+	@ApiModelProperty(value = "主管领导名称")
+	private String zgldmc;
 
 	/**
 	 * 主办部门编号

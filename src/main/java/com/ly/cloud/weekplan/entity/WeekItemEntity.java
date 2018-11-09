@@ -1,19 +1,12 @@
 package com.ly.cloud.weekplan.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -68,6 +61,18 @@ public class WeekItemEntity implements Serializable {
 	 */
 	@TableField(value = "NR")
 	private String nr;
+
+	/**
+	 * 主管领导编号
+	 */
+	@TableField(value = "ZGLDBH")
+	private String zgldbh;
+
+	/**
+	 * 主管领导名称
+	 */
+	@TableField(value = "ZGLDMC")
+	private String zgldmc;
 
 	/**
 	 * 主办部门编号

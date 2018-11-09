@@ -1,11 +1,10 @@
 package com.ly.cloud.weekplan.vo;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ly.cloud.weekplan.common.utils.excel.ExcelField;
-
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 
@@ -74,6 +73,16 @@ public class WeekItemVo{
 	 */
 	@ExcelField(title="内容", align=8, sort=20)
 	private String nr;
+
+	/**
+	 * 主管领导编号
+	 */
+	private String zgldbh;
+
+	/**
+	 * 主管领导名称
+	 */
+	private String zgldmc;
 
 	/**
 	 * 主办部门编号

@@ -81,6 +81,18 @@ public class WeekItemDto implements Serializable {
 	private String nr;
 
 	/**
+	 * 主管领导编号
+	 */
+	@ApiModelProperty(value = "主管领导编号")
+	private String zgldbh;
+
+	/**
+	 * 主管领导名称
+	 */
+	@ApiModelProperty(value = "主管领导名称")
+	private String zgldmc;
+
+	/**
 	 * 主办部门编号
 	 */
 	@ApiModelProperty(value = "主办部门编号")
