@@ -10,6 +10,8 @@
         <result column="XSDD" property="xsdd" />
         <result column="HYSBH" property="hysbh" />
         <result column="NR" property="nr" />
+        <result column="ZGLDBH" property="zgldbh" />
+        <result column="ZGLDMC" property="zgldmc" />
         <result column="ZBBMBH" property="zbbmbh" />
         <result column="ZBBMMC" property="zbbmmc" />
         <result column="CXLDBH" property="cxldbh" />
@@ -26,7 +28,7 @@
     
      <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-       t.BH,t.KSSJ,t.JSSJ,t.XSDD,t.HYSBH,t.NR ,t.ZBBMBH,t.ZBBMMC,t.CXLDBH,t.CXLDMC,t.CJRYBH
+       t.BH,t.KSSJ,t.JSSJ,t.XSDD,t.HYSBH,t.NR ,t.ZGLDBH,t.ZGLDMC,t.ZBBMBH,t.ZBBMMC,t.CXLDBH,t.CXLDMC,t.CJRYBH
        ,t.CJRYMC,t.TXRYBH,t.TXRYMC,t.ZT,t.PXH,t.SFHYS,t.ORGCLASS
     </sql>
     

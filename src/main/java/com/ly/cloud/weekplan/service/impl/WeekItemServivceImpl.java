@@ -317,8 +317,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			for(String leaderId : leaders.split(",")) {
 				Map<String,Object> map = new HashMap<>();
 				map.put("leaderId", leaderId);
-				map.put("startTime", weekItemDto.getKssj());
-				map.put("endTime", weekItemDto.getJssj());
+				map.put("startTime", DateUtils.format(weekItemDto.getKssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+				map.put("endTime", DateUtils.format(weekItemDto.getJssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
 				map.put("orgId", orgId);
 				List<Map<String,Object>> leaderList = weekItemMapper.getConflict(map);
 				if(null == leaderList || leaderList.size() ==0) {
@@ -327,8 +327,7 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 				}
 				list.addAll(leaderList);
 			}
-		}
-		return list;
+		}		return list;
 	}
 }
 
