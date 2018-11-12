@@ -49,7 +49,7 @@
     
     <!-- 局领导是否有会议冲突 -->
     <select id="getMeetingConflict" resultType="java.util.Map">
-      select t.hymc,t.kssj,t.jssj,t.hylxr,t.lxrdh,decode(t.hybh,null,0,1) as type from LY_BG_HYGL_HYXXB t left join LY_BG_HYGL_HYCYRY a on t.HYBH = a.HYBH 
+      select t.hymc,t.kssj,t.jssj,t.hylxr,t.lxrdh,a.cyzbh,a.cyzxm,decode(t.hybh,null,0,1) as type from LY_BG_HYGL_HYXXB t left join LY_BG_HYGL_HYCYRY a on t.HYBH = a.HYBH 
   	  where a.cyzbh = #{leaderId}  and a.SFYTZ = '1' and a.SFYQD = '0' and
       ( (#{startTime} between t.KSSJ and t.JSSJ ) or (#{endTime} between t.KSSJ and t.JSSJ )
         or 
