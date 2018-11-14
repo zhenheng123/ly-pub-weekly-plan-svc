@@ -148,10 +148,4 @@ public class WeekItemEntity implements Serializable {
 	@TableField(value = "ORGCLASS")
 	private String orgClass;
 
-	/**
-	 * 审批状态: 1.待审批,2.审批中,3.审批完毕
-	 */
-	@TableField(value = "SPZT")
-	private String approvalStatus;
-
 }

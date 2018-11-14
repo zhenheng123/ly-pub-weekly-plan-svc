@@ -155,9 +155,5 @@ public class WeekItemVo{
 	 * 机构编号
 	 */
 	private String orgClass;
-	/**
-	 * 审批状态: 1.待审批,2.审批中,3.审批完毕
-	 */
-	private String approvalStatus;
-	
+
 }

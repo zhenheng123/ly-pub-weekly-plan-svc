@@ -165,12 +165,6 @@ public class WeekItemDto implements Serializable {
 	 */
 	@ApiModelProperty(value = "是否使用会议室0否，1是")
 	private Integer sfhys;
-
-	/**
-	 * 审批状态: 1.待审批,2.审批中,3.审批完毕
-	 */
-	@ApiModelProperty(value = "审批状态: 1.待审批,2.审批中,3.审批完毕")
-	private String approvalStatus;
 	
 	
 
