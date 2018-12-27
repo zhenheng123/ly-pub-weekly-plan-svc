@@ -3,6 +3,7 @@ package com.ly.cloud.weekplan.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -102,7 +103,10 @@ public class WeekItemController {
 			String orgId
 			
 		) throws Exception {
-		String approvalStatus = weekServivce.selectById(wid).getApprovalStatus();
+		String approvalStatus = "";
+		if (StringUtils.isNotBlank(wid)) {
+			approvalStatus = weekServivce.selectById(wid).getApprovalStatus();
+		}
 		PageInfo<WeekItemVo> weekItemVoPageInfo = weekItemServivce.selectPage(pageNum, pageSize, wid, map, orgId);
 		return new WebResponse<WeekItemPageVO>().success(new WeekItemPageVO(approvalStatus, weekItemVoPageInfo));
 	}
