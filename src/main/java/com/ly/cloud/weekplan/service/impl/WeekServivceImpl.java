@@ -54,14 +54,9 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 	private final static int WEEK_PLAN_ITEM_STATUS_ACTIVE = 1;
 
 	/**
-	 * 待审核
+	 * 审核结束
 	 */
-	private final static String WEEK_PLAN_NOT_APPROVED = "0";
-
-	/**
-	 * 已审核
-	 */
-	private final static String WEEK_PLAN_APPROVED = "1";
+	private final static String WEEK_PLAN_APPROVED = "3";
 
 	@Autowired
 	WeekItemServivce weekItemServivce;
@@ -107,7 +102,7 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 		Integer newZt = newEntity.getZt();
 
 		if (newZt == WEEK_PLAN_STATUS_PUBLISHED &&
-			StringUtils.isNotBlank(oldApprovalStatus) && WEEK_PLAN_NOT_APPROVED.equals(oldApprovalStatus)) {
+			StringUtils.isNotBlank(oldApprovalStatus) && !WEEK_PLAN_APPROVED.equals(oldApprovalStatus)) {
 			throw new BusinessException("未审核周程无法发布");
 		}
 
