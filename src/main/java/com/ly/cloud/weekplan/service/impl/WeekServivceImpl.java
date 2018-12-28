@@ -15,6 +15,7 @@ import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
 import com.ly.cloud.weekplan.vo.WeekVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,16 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 	 * 有效周程项
 	 */
 	private final static int WEEK_PLAN_ITEM_STATUS_ACTIVE = 1;
+
+	/**
+	 * 待审核
+	 */
+	private final static String WEEK_PLAN_NOT_APPROVED = "0";
+
+	/**
+	 * 已审核
+	 */
+	private final static String WEEK_PLAN_APPROVED = "1";
 
 	@Autowired
 	WeekItemServivce weekItemServivce;
@@ -91,19 +102,24 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 
     @Override
     public boolean update(WeekEntity newEntity) {
+		WeekEntity oldEntity = this.selectById(newEntity.getBh());
+		String oldApprovalStatus = oldEntity.getApprovalStatus();
+		Integer newZt = newEntity.getZt();
+
+		if (newZt == WEEK_PLAN_STATUS_PUBLISHED &&
+			StringUtils.isNotBlank(oldApprovalStatus) && WEEK_PLAN_NOT_APPROVED.equals(oldApprovalStatus)) {
+			throw new BusinessException("未审核周程无法发布");
+		}
+
 		boolean result = this.updateById(newEntity);
-		if (newEntity.getZt() != null){
-			if (newEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {
-				WeekEntity oldEntity = this.selectById(newEntity.getBh());
-				if (oldEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) {//未发布转为发布
-					syncDailyPlan(false, newEntity);
-				} else if (oldEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {//原先就有发布，则清除旧日程数据
-					syncDailyPlan(true, newEntity);
-				} else {
-					throw new BusinessException("周程发布状态错误");
-				}
-			} else if (newEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED){
+		//如果是修改为发布状态，则同步日程
+		if (newZt == WEEK_PLAN_STATUS_PUBLISHED) {
+			if (oldEntity.getZt() == WEEK_PLAN_STATUS_UNPUBLISHED) {//未发布转为发布，不用清楚旧日程数据
+				syncDailyPlan(false, newEntity);
+			} else if (oldEntity.getZt() == WEEK_PLAN_STATUS_PUBLISHED) {//原先就为发布，则清除旧日程数据
 				syncDailyPlan(true, newEntity);
+			} else {
+				throw new BusinessException("周程发布状态错误");
 			}
 		}
 		return result;
