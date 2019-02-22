@@ -92,7 +92,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		//判断是否使用了会议室
 		if(StringUtils.isNotBlank(weekItemDto.getHysbh())) {
 			//处理关联的会议室
-			weekItemEntity.setXsdd(weekItemDto.getHysbhmc());
+			//weekItemEntity.setXsdd(weekItemDto.getHysbhmc());
+			weekItemEntity.setXsdd(weekItemDto.getXsdd());
 			if(weekItemDto.getJssj()!=null && weekItemDto.getJssj().before(weekItemDto.getKssj())) {
 				throw new CloudException("周程项的结束时间不能小于开始时间");
 			}
