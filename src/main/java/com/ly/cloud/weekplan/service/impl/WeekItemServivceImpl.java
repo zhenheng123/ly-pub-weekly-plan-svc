@@ -1,24 +1,5 @@
 package com.ly.cloud.weekplan.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -40,8 +21,16 @@ import com.ly.cloud.weekplan.service.WeekItemServivce;
 import com.ly.cloud.weekplan.service.WeekServivce;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 
@@ -58,14 +47,19 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
 public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEntity> implements WeekItemServivce {
 
-	@Autowired
-	WeekServivce weekServivce;
+	private final WeekServivce weekServivce;
 	
-	@Autowired
-	private WeekItemMapper weekItemMapper;
+	private final WeekItemMapper weekItemMapper;
 	
+	private final MeetingClient meetingClient;
+
 	@Autowired
-	private MeetingClient meetingClient;
+	public WeekItemServivceImpl(WeekItemMapper weekItemMapper,MeetingClient meetingClient, WeekServivce weekServivce) {
+		this.weekItemMapper = weekItemMapper;
+		this.meetingClient = meetingClient;
+		this.weekServivce = weekServivce;
+	}
+
 	/**
 	 * (non-Javadoc)
 	 * Title: addWeekItem
@@ -159,14 +153,12 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 
 	@Override
-	public PageInfo<WeekItemVo> selectPage(int pageNum, int pageSize, String wid, Map<String,String> map, String orgId)
-			throws Exception {
-		WeekEntity weekEntity=null;
-		Page<WeekItemEntity> page=new Page<WeekItemEntity>();
+	public PageInfo<WeekItemVo> selectPage(int pageNum, int pageSize, String wid, Map<String,String> map, String orgId) {
+		WeekEntity weekEntity;
+		Page<WeekItemEntity> page=new Page<>();
 		if(StringUtils.isNotBlank(wid)) {
 			weekEntity= weekServivce.selectById(wid);
 			if(weekEntity!=null && weekEntity.getKsrq()!=null && weekEntity.getJsrq()!=null) {
-				Collection<String> columns;
 				page= this.selectPage(
 						new Page<WeekItemEntity>(pageNum, pageSize), 
 						new EntityWrapper<WeekItemEntity>()
@@ -328,7 +320,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 				}
 				list.addAll(leaderList);
 			}
-		}		return list;
+		}
+		return list;
 	}
 }
 

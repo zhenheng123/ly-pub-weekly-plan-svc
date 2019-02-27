@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.client.DailyPlanClient;
+import com.ly.cloud.weekplan.common.utils.DateUtils;
 import com.ly.cloud.weekplan.dto.PushDto;
 import com.ly.cloud.weekplan.entity.WeekEntity;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,14 +71,16 @@ public class WeekServivceImpl extends ServiceImpl<WeekMapper, WeekEntity> implem
 
 		WeekEntity weekEntity = this.selectById(id);
 
-		if (weekEntity == null) {
-			return null;
-		}
+		if (weekEntity == null) return null;
 
+        Date startTime = DateUtils.setDayStar(weekEntity.getKsrq());
+        Date endTime = DateUtils.setDayEnd(weekEntity.getJsrq());
+        String orgClass = weekEntity.getOrgclass();
 		List<WeekItemEntity> weekItemList = weekItemServivce.selectList(
 				new EntityWrapper<WeekItemEntity>()
-						.between("KSSJ", weekEntity.getKsrq(), weekEntity.getJsrq())
+						.between("KSSJ", startTime, endTime)
 						.eq(izt != -1, "ZT", izt)
+                        .eq(!"-1".equals(orgClass), "ORGCLASS",orgClass)
 						.orderBy("KSSJ", true)
 				);
 		List<WeekItemVo> WeekItemVoList = new ArrayList<WeekItemVo>();
