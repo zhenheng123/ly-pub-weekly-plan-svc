@@ -56,13 +56,14 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	
 	private final MeetingClient meetingClient;
 	
-	private DailyPlanClient dailyPlanClient;
+	private final DailyPlanClient dailyPlanClient;
 
 	@Autowired
-	public WeekItemServivceImpl(WeekItemMapper weekItemMapper,MeetingClient meetingClient, WeekServivce weekServivce) {
+	public WeekItemServivceImpl(WeekItemMapper weekItemMapper,MeetingClient meetingClient, WeekServivce weekServivce,DailyPlanClient dailyPlanClient) {
 		this.weekItemMapper = weekItemMapper;
 		this.meetingClient = meetingClient;
 		this.weekServivce = weekServivce;
+		this.dailyPlanClient = dailyPlanClient;
 	}
 
 	/**
