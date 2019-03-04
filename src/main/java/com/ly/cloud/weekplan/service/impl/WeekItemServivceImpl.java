@@ -8,7 +8,10 @@ import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.CloudException;
 import com.ly.cloud.exception.biz.BusinessException;
 import com.ly.cloud.web.utils.WebResponse;
+import com.ly.cloud.weekplan.client.DailyPlanClient;
 import com.ly.cloud.weekplan.client.MeetingClient;
+import com.ly.cloud.weekplan.client.dto.LeaderDailyPlanDto;
+import com.ly.cloud.weekplan.client.dto.LeaderDailyPlanVo;
 import com.ly.cloud.weekplan.common.utils.DateUtils;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
 import com.ly.cloud.weekplan.common.validator.group.AddGroup;
@@ -52,6 +55,8 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 	private final WeekItemMapper weekItemMapper;
 	
 	private final MeetingClient meetingClient;
+	
+	private DailyPlanClient dailyPlanClient;
 
 	@Autowired
 	public WeekItemServivceImpl(WeekItemMapper weekItemMapper,MeetingClient meetingClient, WeekServivce weekServivce) {
@@ -263,17 +268,40 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		return list;
 	}
 	
-	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
+	@Override
 	public boolean update(WeekItemUpdateDto weekItemDto) {
 		WeekItemEntity weekItemEntity = new WeekItemEntity();
 		BeanUtils.copyProperties(weekItemDto, weekItemEntity);
         boolean result = updateById(weekItemEntity);
-
         //同步日程
-        syncDailyPlan(true, weekItemEntity);
+        try {
+        	syncDailyPlan(true, weekItemEntity);
+		} catch (Exception e) {
+			log.error("同步日程出现异常:"+e.getMessage());
+		}
+        //同步局领导日程
+        syncLeaderDailyPlan(weekItemEntity);
         return result;
 	}
 
+	private void syncLeaderDailyPlan(WeekItemEntity weekItemEntity) {
+		try {
+			WebResponse<List<LeaderDailyPlanVo>> result = dailyPlanClient.queryByWeekId(weekItemEntity.getBh());
+			//判断之前是否同步过该条记录
+			if(null != result && null != result.getData() && result.getData().size()>0) {
+				//先删掉这条周程记录对应的局领导日程再同步
+			//	dailyPlanClient.deleteListByItemId(weekItemEntity.getBh());
+				List<String> ids = new ArrayList<>();
+				ids.add(weekItemEntity.getBh());
+				sync(ids,weekItemEntity.getOrgClass());
+			}
+		} catch (Exception e) {
+			log.error("同步局领导日程出现异常:"+e.getMessage());
+		}
+	}
+	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
 	@Override
 	public boolean deleteBatchIds(String[] ids) {
 		HashSet<WeekEntity> set = new HashSet<>();
@@ -283,9 +311,15 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 		}
 		//先删除数据再做日程同步
 		boolean result = deleteBatchIds(Arrays.asList(ids));
-		for (WeekEntity weekEntity : set) {
-			weekServivce.syncDailyPlan(true, weekEntity);
+		try {
+			for (WeekEntity weekEntity : set) {
+				weekServivce.syncDailyPlan(true, weekEntity);
+			}
+		} catch (Exception e) {
+			log.error("同步日程出现异常:"+e.getMessage());
 		}
+		//同步局领导日程数据
+		dailyPlanClient.deleteListByItemId(Arrays.asList(ids));
 		return result;
 	}
 
@@ -322,6 +356,60 @@ public class WeekItemServivceImpl extends ServiceImpl<WeekItemMapper, WeekItemEn
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public List<WeekItemVo> getWeekplanList(WeekItemDto weekItemDto) throws BusinessException {
+		return weekItemMapper.getWeekplanList(weekItemDto);
+	}
+
+	@Override
+	public int sync(List<String> ids,String orgId) throws BusinessException {
+		for(String id:ids) {
+			WeekItemEntity entity = weekItemMapper.selectById(id);
+			if(null != entity) {
+				//根据条目id判断是否已同步过数据
+				WebResponse<List<LeaderDailyPlanVo>> vo = dailyPlanClient.queryByWeekId(id);
+				if(null != vo && null != vo.getData() && vo.getData().size()>0) {
+					//删掉原数据
+					List<String> source = new ArrayList<>();
+					source.add(id);
+					dailyPlanClient.deleteListByItemId(source);
+					//continue;
+				}
+				//执行周程数据同步到局领导日程
+				if(StringUtils.isNotBlank(entity.getZgldbh())) {
+					String[] leadIds_1 = entity.getZgldbh().split(",");
+					String[] leadNames_1 = entity.getZgldmc().split(",");
+					dataSync(leadIds_1,leadNames_1,entity,orgId);
+				}
+				if(StringUtils.isNotBlank(entity.getCxldbh())) {
+					String[] leadIds_2 = entity.getCxldbh().split(",");
+					String[] leadNames_2 = entity.getCxldmc().split(",");
+					dataSync(leadIds_2,leadNames_2,entity,orgId);
+				}
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	private void dataSync(String[] leadIds,String[] leadNames,WeekItemEntity entity,String orgId) {
+		for(int i = 0;i<leadIds.length;i++) {
+			//组装数据
+			LeaderDailyPlanDto dto = new LeaderDailyPlanDto();
+			//dto.setBh(entity.getBh());
+			dto.setLdbh(leadIds[i]);
+			dto.setLdxm(leadNames[i]);
+			dto.setSx(entity.getNr());
+			dto.setKssj(DateUtils.format(entity.getKssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			dto.setJssj(DateUtils.format(entity.getJssj(), DateUtils.DATE_WITHOUTSEC_PATTERN24));
+			dto.setDd(entity.getXsdd());
+			dto.setXq(DateUtils.getWeekOfDate(entity.getKssj()));
+			dto.setWeekItemId(entity.getBh());
+			//远程调用局领导日程新增接口
+			dailyPlanClient.insert(dto, orgId);
+		}
 	}
 }
 

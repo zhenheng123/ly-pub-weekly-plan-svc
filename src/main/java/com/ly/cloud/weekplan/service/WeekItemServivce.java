@@ -166,4 +166,10 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	/**检查局领导冲突*/
 	public List<Map<String, Object>> getConflict(WeekItemDto weekItemDto, String orgId);
 
+	/**查询本周内的周程条目数据*/
+	public List<WeekItemVo> getWeekplanList(WeekItemDto weekItemDto) throws BusinessException;
+
+	/**周程数据同步至局领导日程*/
+	public int sync(List<String> ids,String orgId) throws BusinessException;
+
 }

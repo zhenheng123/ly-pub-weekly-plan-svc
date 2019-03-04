@@ -138,4 +138,33 @@ public class WeekItemController {
 		}
 	}
 	
+	@ApiOperation(value = "查询本周内的周程条目数据", notes = "查询本周内的周程条目数据")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "header", name = "loginUserOrgId", dataType = "String", required = true, value = "机构编号", defaultValue = "1")
+	})
+	@RequestMapping(value = "/list/tswk", method = RequestMethod.GET)
+	public WebResponse<List<WeekItemVo>> getWeekplanList(@ModelAttribute WeekItemDto weekItemDto) {
+		try {
+			List<WeekItemVo> list = weekItemServivce.getWeekplanList(weekItemDto);
+			return new WebResponse<List<WeekItemVo>>().success(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new WebResponse<List<WeekItemVo>>().failure(e.getMessage());
+		}
+	}
+	
+	@ApiOperation("周程数据同步至局领导日程")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "header", name = "loginUserOrgId", dataType = "String", required = true, value = "机构编号", defaultValue = "1")
+	})
+    @RequestMapping(value="/sync/leaderPlan",method = RequestMethod.POST)
+    public WebResponse<Integer> sync(@RequestBody List<String> ids,@RequestHeader("loginUserOrgId")String orgId){
+		try {
+			int result = weekItemServivce.sync(ids,orgId);
+			return new WebResponse<Integer>().success(result);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new WebResponse<Integer>().failure(e.getMessage());
+		}
+    }
 }

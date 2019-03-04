@@ -27,6 +27,8 @@ public interface WeekItemMapper extends BaseMapper<WeekItemEntity> {
 	List<Map<String, Object>> getConflict(Map<String, Object> map);
 	/**局领导是否有会议冲突*/
 	List<Map<String, Object>> getMeetingConflict(Map<String, Object> map);
+	/**查询本周内的周程条目数据*/
+	List<WeekItemVo> getWeekplanList(@Param("vo")WeekItemDto weekItemDto);
 	
 	
 

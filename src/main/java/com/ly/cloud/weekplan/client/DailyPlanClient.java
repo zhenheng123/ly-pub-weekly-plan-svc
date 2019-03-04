@@ -1,12 +1,20 @@
 package com.ly.cloud.weekplan.client;
 
-import com.ly.cloud.weekplan.dto.PushDto;
-import com.ly.cloud.web.utils.WebResponse;
+import java.util.List;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.ly.cloud.web.utils.WebResponse;
+import com.ly.cloud.weekplan.client.dto.LeaderDailyPlanDto;
+import com.ly.cloud.weekplan.client.dto.LeaderDailyPlanVo;
+import com.ly.cloud.weekplan.dto.PushDto;
 
 /**
  * Class Name: DailyPlanClient
@@ -49,6 +57,21 @@ public interface DailyPlanClient {
      */
     @RequestMapping(value = "/dailyPlan/deleteByTaskId", method = RequestMethod.GET)
     public  WebResponse<Boolean> deleteByTaskId(@RequestParam(value = "taskId") String taskId);
+    
+    
+    
+    @RequestMapping(value = "/leaderDailyPlan/insert", method = RequestMethod.POST)
+    public  WebResponse<Integer> insert(@RequestBody LeaderDailyPlanDto leaderDailyPlanDto,@RequestHeader("loginUserOrgId")String orgId);
+    
+    
+    @RequestMapping(value = "/leaderDailyPlan/{weekItemId}/list", method = RequestMethod.GET)
+    public  WebResponse<List<LeaderDailyPlanVo>> queryByWeekId(@PathVariable("weekItemId") String weekItemId);
+    
+    
+    @RequestMapping(value = "/leaderDailyPlan/itemId/deleteList", method = RequestMethod.POST)
+    public WebResponse<Integer> deleteListByItemId(@RequestBody List<String> weekItemIds);
+    
+    
 
     @Component
     class DailyPlanClientFallback implements DailyPlanClient {
@@ -62,6 +85,22 @@ public interface DailyPlanClient {
         public WebResponse<Boolean> deleteByTaskId(@RequestParam String taskId) {
             return null;
         }
-    }
 
+		@Override
+		public WebResponse<Integer> insert(LeaderDailyPlanDto leaderDailyPlanDto,
+				String orgId) {
+			return null;
+		}
+
+		@Override
+		public WebResponse<List<LeaderDailyPlanVo>> queryByWeekId(String weekItemId) {
+			return null;
+		}
+
+		@Override
+		public WebResponse<Integer> deleteListByItemId(List<String> weekItemIds) {
+			return null;
+		}
+    }
+	
 }

@@ -58,6 +58,15 @@
 		  ]]> 
     </select> 
     
+     <!-- 查询本周内的周程条目数据 -->
+    <select id="getWeekplanList" resultMap="VoResultMap">
+      select <include refid="Base_Column_List"></include> from LY_BG_ZC_ZCTM t
+  	  where t.zt = 1 and t.spzt = 3 and (t.cxldbh is not null or t.zgldbh is not null )
+      <![CDATA[ 
+      	and (t.kssj >= cast(#{vo.kssj} as date) and t.jssj <= cast(#{vo.jssj} as date))
+	  ]]> 
+    </select> 
+    
     
     
 </mapper>
