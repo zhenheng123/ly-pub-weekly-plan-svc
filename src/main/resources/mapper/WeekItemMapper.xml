@@ -65,6 +65,10 @@
       <![CDATA[ 
       	and (t.kssj >= cast(#{vo.kssj} as date) and t.jssj <= cast(#{vo.jssj} as date))
 	  ]]> 
+	  <if test="vo.nr!=null and vo.nr!=''">
+	  		<bind name="_nr" value="'%'+vo.nr+'%'"/>
+	      		and t.nr like #{_nr}
+	  </if>
     </select> 
     
     
