@@ -1,5 +1,10 @@
 package com.ly.cloud.weekplan.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.exception.biz.BusinessException;
@@ -8,10 +13,6 @@ import com.ly.cloud.weekplan.dto.WeekItemUpdateDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.MeetingInfoVo;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -167,7 +168,7 @@ public interface WeekItemServivce extends IService<WeekItemEntity> {
 	public List<Map<String, Object>> getConflict(WeekItemDto weekItemDto, String orgId);
 
 	/**查询本周内的周程条目数据*/
-	public List<WeekItemVo> getWeekplanList(WeekItemDto weekItemDto) throws BusinessException;
+	public Page<WeekItemVo> getWeekplanList(Page<WeekItemVo> page,WeekItemDto weekItemDto) throws BusinessException;
 
 	/**周程数据同步至局领导日程*/
 	public int sync(List<String> ids,String orgId) throws BusinessException;

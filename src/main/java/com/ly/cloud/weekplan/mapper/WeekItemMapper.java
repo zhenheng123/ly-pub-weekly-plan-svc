@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.ly.cloud.weekplan.dto.WeekItemDto;
 import com.ly.cloud.weekplan.entity.WeekItemEntity;
 import com.ly.cloud.weekplan.vo.WeekItemVo;
@@ -28,7 +29,7 @@ public interface WeekItemMapper extends BaseMapper<WeekItemEntity> {
 	/**局领导是否有会议冲突*/
 	List<Map<String, Object>> getMeetingConflict(Map<String, Object> map);
 	/**查询本周内的周程条目数据*/
-	List<WeekItemVo> getWeekplanList(@Param("vo")WeekItemDto weekItemDto);
+	List<WeekItemVo> getWeekplanList(@Param("page")Pagination page,@Param("vo")WeekItemDto weekItemDto);
 	
 	
 

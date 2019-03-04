@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ly.cloud.common.mybatisplus.plugins.PageInfo;
 import com.ly.cloud.web.utils.WebResponse;
 import com.ly.cloud.weekplan.common.validator.ValidatorUtils;
@@ -140,16 +141,18 @@ public class WeekItemController {
 	
 	@ApiOperation(value = "查询本周内的周程条目数据", notes = "查询本周内的周程条目数据")
 	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "query", name = "pageNum", dataType = "int", required = true, value = "当前页码", defaultValue = "1"),
+		@ApiImplicitParam(paramType = "query", name = "pageSize", dataType = "int", required = true, value = "每页条数", defaultValue = "5"),
 		@ApiImplicitParam(paramType = "header", name = "loginUserOrgId", dataType = "String", required = true, value = "机构编号", defaultValue = "1")
 	})
 	@RequestMapping(value = "/list/tswk", method = RequestMethod.GET)
-	public WebResponse<List<WeekItemVo>> getWeekplanList(@ModelAttribute WeekItemDto weekItemDto) {
+	public WebResponse<Page<WeekItemVo>> getWeekplanList(@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize,@ModelAttribute WeekItemDto weekItemDto) {
 		try {
-			List<WeekItemVo> list = weekItemServivce.getWeekplanList(weekItemDto);
-			return new WebResponse<List<WeekItemVo>>().success(list);
+			Page<WeekItemVo> page = weekItemServivce.getWeekplanList(new Page<WeekItemVo>(pageNum, pageSize),weekItemDto);
+			return new WebResponse<Page<WeekItemVo>>().success(page);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return new WebResponse<List<WeekItemVo>>().failure(e.getMessage());
+			return new WebResponse<Page<WeekItemVo>>().failure(e.getMessage());
 		}
 	}
 	
